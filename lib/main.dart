@@ -10,7 +10,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(primary:const Color.fromARGB(255, 148, 212, 187),seedColor: const Color.fromARGB(255, 148, 212, 187)),
+        colorScheme: ColorScheme.fromSeed(
+          primary: const Color.fromARGB(255, 68, 210, 155),
+          seedColor: const Color.fromARGB(255, 148, 212, 187),
+        ),
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -26,56 +29,98 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  
-
+  List<String> entries = <String>['無題'];
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    List<String> entries = <String>['A', 'B', 'C',];
     return Scaffold(
       appBar: AppBar(
+        title: Text(
+                "all",
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
         actions: [
-          Icon(Icons.add,size: 50,color: theme.colorScheme.primary,)
+          IconButton(
+            onPressed: () {
+              setState(() {
+                entries.add('無題');
+              });
+            },
+            icon: Icon(Icons.add, size: 50, color: theme.colorScheme.primary),
+          ),
         ],
       ),
       body: SizedBox(
-        width:double.infinity,
+        width: double.infinity,
         child: Column(
-          crossAxisAlignment:CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "全てのプロジェクト",
-              style:TextStyle(fontSize: 30,fontWeight: FontWeight.bold)
-            ),
             Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.all(8),
-                itemCount: entries.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    height: 50,
-                    color: theme.colorScheme.primary,
-                    child: Center(child: Text(entries[index])),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) => const Divider(),
-              )
-              // ListView(
-              //   padding: const EdgeInsets.all(8),
-              //   children:[
-              //     Container(
-              //       height: 50,
-              //       color: theme.colorScheme.primary,
-              //       child: const Center(child: Text('Entry C')),
-              //     ),
-                  
-
-              //   ],
-              // ),
-            )
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                      width: 1,
+                    ),
+                    borderRadius: BorderRadius.circular(13)
+                  ),
+                  child: ListView.separated(
+                    itemCount: entries.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      List<Widget> children = [];
+                      if (index == 0) {
+                        children.add(Divider());
+                      }
+                      children.add(Choices(entries: entries, index: index));
+                      if (index == entries.length - 1) {
+                        children.add(Divider());
+                      }
+                      return Column(children: children);
+                    },
+                    separatorBuilder: (BuildContext context, int index) =>
+                        const Divider(),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
-      )
+      ),
+    );
+  }
+}
+
+class Choices extends StatelessWidget {
+  const Choices({
+    super.key,
+    required this.index,
+    required this.entries,
+  });
+
+  final int index;
+  final List<String> entries;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: (){
+        
+      },
+      child: SizedBox(
+        height: 70,
+        child: Center(
+          child: Text(
+            entries[index],
+            style: TextStyle(color: Colors.black),
+          ),
+        ),
+      ),
     );
   }
 }
