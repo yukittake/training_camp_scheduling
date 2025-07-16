@@ -1,10 +1,13 @@
 import 'package:training_camp_scheduling/training_camp_class.dart';
+import 'package:training_camp_scheduling/camp_state.dart';
+
 import 'second_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -18,23 +21,17 @@ class MyApp extends StatelessWidget {
           seedColor: const Color.fromARGB(255, 148, 212, 187),
         ),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
 
+class MyHomePage extends ConsumerWidget{
+  const MyHomePage({super.key});
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  List<TrainingCamp> entries = <TrainingCamp>[TrainingCamp(campTitle: "A"),TrainingCamp(campTitle: "B"),TrainingCamp(campTitle: "C")];
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
+    final campState=ref.watch(campStateNotifierProvider);
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
@@ -49,9 +46,8 @@ class _MyHomePageState extends State<MyHomePage> {
         actions: [
           IconButton(
             onPressed: () {
-              setState(() {
-                entries.add(TrainingCamp());
-              });
+              final notifier=ref.read(campStateNotifierProvider.notifier);
+              notifier.add();
             },
             icon: Icon(Icons.add, size: 50, color: theme.colorScheme.primary),
           ),
@@ -66,10 +62,10 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: ListView.separated(
-                  itemCount: entries.length,
+                  itemCount: campState.length,
                   itemBuilder: (BuildContext context, int index) {
                     List<Widget> children = [];
-                    final reversedIndex = entries.length - 1 - index;
+                    final reversedIndex = campState.length - 1 - index;
                     if (index == 0) {
                       children.add(
                         Column(
@@ -92,10 +88,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     children.add(
                       GestureDetector(
                         onHorizontalDragEnd: (details){
+                          final notifier=ref.read(campStateNotifierProvider.notifier);
                           if (details.velocity.pixelsPerSecond.dx < 0){
-                            setState((){
-                              entries.removeAt(reversedIndex);
-                            });
+                            notifier.delete(index);
                           }
                         },
                         onTap: () {
@@ -111,7 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: Padding(
                             padding: const EdgeInsets.only(left:15),
                             child: Text(
-                              entries[reversedIndex].campTitle,
+                              campState[reversedIndex].campTitle,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -122,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                     );
-                    if (index == entries.length - 1) {
+                    if (index == campState.length - 1) {
                       children.add(
                         Container(
                           decoration: BoxDecoration(

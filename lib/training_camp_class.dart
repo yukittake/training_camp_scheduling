@@ -14,6 +14,6 @@ class Band{
   String _bandTitle;
   List<String> _members;
   Band({String? bandTitle,List<String>? members})
-    : _bandTitle=bandTitle ?? "バンド名前",
+    : _bandTitle=bandTitle ?? "バンド名",
       _members=members ?? <String>[];
 }
