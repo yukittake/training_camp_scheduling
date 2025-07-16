@@ -1,3 +1,4 @@
+import 'package:training_camp_scheduling/training_camp_class.dart';
 import 'second_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<String> entries = <String>["A","B","C"];
+  List<TrainingCamp> entries = <TrainingCamp>[TrainingCamp(campTitle: "A"),TrainingCamp(campTitle: "B"),TrainingCamp(campTitle: "C")];
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -49,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
           IconButton(
             onPressed: () {
               setState(() {
-                entries.add('無題');
+                entries.add(TrainingCamp());
               });
             },
             icon: Icon(Icons.add, size: 50, color: theme.colorScheme.primary),
@@ -68,6 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   itemCount: entries.length,
                   itemBuilder: (BuildContext context, int index) {
                     List<Widget> children = [];
+                    final reversedIndex = entries.length - 1 - index;
                     if (index == 0) {
                       children.add(
                         Column(
@@ -92,9 +94,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         onHorizontalDragEnd: (details){
                           if (details.velocity.pixelsPerSecond.dx < 0){
                             setState((){
-                              entries.removeAt(index);
+                              entries.removeAt(reversedIndex);
                             });
-                            print("swipe");
                           }
                         },
                         onTap: () {
@@ -110,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           child: Padding(
                             padding: const EdgeInsets.only(left:15),
                             child: Text(
-                              entries[index],
+                              entries[reversedIndex].campTitle,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -151,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     }
                     return Column(children: children);
                   },
-                  separatorBuilder: (BuildContext context, int index) =>
+                  separatorBuilder: (BuildContext context, int reversedIndex) =>
                       Container(height: 1, color: Colors.grey) 
                       ,
                 ),
