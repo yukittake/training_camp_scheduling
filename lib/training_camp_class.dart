@@ -6,7 +6,7 @@ class TrainingCamp {
   List<Band> get bands => _bands;
 
   TrainingCamp({String? campTitle, List<Band>? bands})
-      : _campTitle = campTitle ?? "無題", // campTitleがnullなら"無題"
+      : _campTitle = campTitle ?? "新規", // campTitleがnullなら"無題"
         _bands = bands ?? <Band>[];       // bandsがnullなら空のリスト
 }
 

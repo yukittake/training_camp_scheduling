@@ -90,13 +90,13 @@ class MyHomePage extends ConsumerWidget{
                         onHorizontalDragEnd: (details){
                           final notifier=ref.read(campStateNotifierProvider.notifier);
                           if (details.velocity.pixelsPerSecond.dx < 0){
-                            notifier.delete(index);
+                            notifier.delete(reversedIndex);
                           }
                         },
                         onTap: () {
                           Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => SecondPage()),
+                          MaterialPageRoute(builder: (context) => SecondPage(index:reversedIndex)),
                         );
                         },
                         child: Container(
