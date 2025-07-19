@@ -27,16 +27,82 @@ class _SecondPageState extends ConsumerState<SecondPage> {
   }
   @override
   Widget build(BuildContext context) {
+    final campState=ref.watch(campStateNotifierProvider);
     return Scaffold(
       appBar: AppBar(
-        //title: //Text(campState[index].campTitle),
-        //TextFormField(style:TextStyle(fontSize: 30),initialValue:"新規",decoration:  const InputDecoration(border: InputBorder.none),)
+        
       ),
-      body: ListView(children: [
-          SizedBox(width: double.infinity,height:300,child: Placeholder(),),
-          TextField(controller: myController,)
-        ]
+      floatingActionButton:  FloatingActionButton(onPressed:(){
+          final notifier=ref.read(campStateNotifierProvider.notifier);
+          notifier.addBand(widget.index);
+        },
+        shape: CircleBorder(),
+        child: Icon(Icons.add,),
       ),
+      // body: ListView(children: [
+      //     SizedBox(width: double.infinity,height:300,child: Placeholder(),),
+      //     Row(
+      //       children: [
+      //         Text("タイトル:"),
+      //         Expanded(
+      //           child: Padding(
+      //             padding: const EdgeInsets.all(8.0),
+      //             child: TextField(
+      //               controller: myController,
+      //               onChanged: (text){
+      //                 final notifier=ref.read(campStateNotifierProvider.notifier);
+      //                 notifier.updateTitle(widget.index,text);
+      //               },
+      //             ),
+      //           ),
+      //         ),
+      //       ],
+      //     )
+      //   ]
+      // ),
+      body:ListView.separated(
+        padding: const EdgeInsets.all(8),
+        itemCount: campState[widget.index].bands.length+1,//初めのウィジェット分プラス１
+        itemBuilder: (BuildContext context, int index) {
+          if(index==0){
+            return Column(children: [
+              SizedBox(width: double.infinity,height:300,child: Placeholder(),),
+              Row(
+                children: [
+                  Text("タイトル:"),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(
+                        controller: myController,
+                        onChanged: (text){
+                          final notifier=ref.read(campStateNotifierProvider.notifier);
+                          notifier.updateTitle(widget.index,text);
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],);
+          }else{
+            return Row(
+                children: [
+                  Text("バンド$index:"),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextField(),
+                    ),
+                  ),
+                ],
+              );
+          }
+          
+
+        },  
+        separatorBuilder: (BuildContext context, int index) => const Divider(),
+      )
     );
   }
 }

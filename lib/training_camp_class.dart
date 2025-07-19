@@ -4,7 +4,8 @@ class TrainingCamp {
 
   String get campTitle => _campTitle;
   List<Band> get bands => _bands;
-
+  set campTitle(String s) => _campTitle=s;
+  set bands(List<Band> lb) => _bands=lb;
   TrainingCamp({String? campTitle, List<Band>? bands})
       : _campTitle = campTitle ?? "新規", // campTitleがnullなら"無題"
         _bands = bands ?? <Band>[];       // bandsがnullなら空のリスト

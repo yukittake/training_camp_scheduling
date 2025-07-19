@@ -12,8 +12,17 @@ class CampStateNotifier extends _$CampStateNotifier {
   void add(){
     state = [...state, TrainingCamp()];
   }
-
   void delete(int index) {
-  state = [...state]..removeAt(index);
+    state = [...state]..removeAt(index);
   }
+  void updateTitle(int index,String newTitle){
+    final updated = [...state];
+    updated[index].campTitle=newTitle;
+    state=updated;
+  }
+  void addBand(int index) {
+  final updated = [...state];
+  updated[index].bands = [...updated[index].bands, Band()];
+  state = updated;
+}
 }
