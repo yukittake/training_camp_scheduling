@@ -21,8 +21,13 @@ class CampStateNotifier extends _$CampStateNotifier {
     state=updated;
   }
   void addBand(int index) {
-  final updated = [...state];
-  updated[index].bands = [...updated[index].bands, Band()];
-  state = updated;
-}
+    final updated = [...state];
+    updated[index].bands = [...updated[index].bands, Band()];
+    state = updated;
+  }
+  void addMember(int index,int bandIndex){
+    final updated = [...state];
+    updated[index].bands[bandIndex].mambers=[...updated[index].bands[bandIndex].members,""];
+    state=updated;
+  }
 }

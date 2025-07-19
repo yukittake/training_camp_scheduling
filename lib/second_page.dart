@@ -39,34 +39,12 @@ class _SecondPageState extends ConsumerState<SecondPage> {
         shape: CircleBorder(),
         child: Icon(Icons.add,),
       ),
-      // body: ListView(children: [
-      //     SizedBox(width: double.infinity,height:300,child: Placeholder(),),
-      //     Row(
-      //       children: [
-      //         Text("タイトル:"),
-      //         Expanded(
-      //           child: Padding(
-      //             padding: const EdgeInsets.all(8.0),
-      //             child: TextField(
-      //               controller: myController,
-      //               onChanged: (text){
-      //                 final notifier=ref.read(campStateNotifierProvider.notifier);
-      //                 notifier.updateTitle(widget.index,text);
-      //               },
-      //             ),
-      //           ),
-      //         ),
-      //       ],
-      //     )
-      //   ]
-      // ),
       body:ListView.separated(
         padding: const EdgeInsets.all(8),
         itemCount: campState[widget.index].bands.length+1,//初めのウィジェット分プラス１
         itemBuilder: (BuildContext context, int index) {
           if(index==0){
             return Column(children: [
-              SizedBox(width: double.infinity,height:300,child: Placeholder(),),
               Row(
                 children: [
                   Text("タイトル:"),
@@ -83,20 +61,46 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                     ),
                   ),
                 ],
-              )
+              ),
+              SizedBox(width: double.infinity,height:300,child: Placeholder(),),
             ],);
           }else{
-            return Row(
-                children: [
-                  Text("バンド$index:"),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(),
+            final aBand=campState[widget.index].bands[index-1];
+            List <Widget>children=[
+              Row(
+                  children: [
+                    Text("バンド名:"),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextField(),
+                      ),
                     ),
+                  ],
+              ),
+            ];
+            for(int i=1;i<=aBand.members.length;i++){
+              children.add(
+                Row(children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left:50),
+                    child: Text("メンバー$i:"),
                   ),
-                ],
+                  Expanded(child:TextFormField()),
+                ],)
               );
+            }
+            children.add(IconButton(onPressed: (){
+              final notifier=ref.read(campStateNotifierProvider.notifier);
+              notifier.addMember(widget.index, index-1);
+            }, icon: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add),
+                Text("メンバーを追加")
+              ],
+            )));
+            return Column(children: children);
           }
           
 
