@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:training_camp_scheduling/camp_state.dart';
+import 'package:training_camp_scheduling/application/state/camp_state.dart';
 
 
 class SecondPage extends ConsumerStatefulWidget {

@@ -1,5 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:training_camp_scheduling/training_camp_class.dart';
+import 'package:training_camp_scheduling/domain/types/training_camp_class.dart';
 part 'camp_state.g.dart';
 
 @riverpod
