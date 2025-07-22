@@ -1,17 +1,17 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:training_camp_scheduling/application/types/training_camp.dart';
+import 'package:training_camp_scheduling/application/types/camp.dart';
 import 'package:training_camp_scheduling/domain/types/band.dart';
 part 'camp_state.g.dart';
 
 @riverpod
 class CampStateNotifier extends _$CampStateNotifier {
   @override
-   List<TrainingCamp> build() {
-    return <TrainingCamp>[TrainingCamp(campTitle: "A"),TrainingCamp(campTitle: "B"),TrainingCamp(campTitle: "C")];
+   List<Camp> build() {
+    return <Camp>[Camp(campTitle: "A"),Camp(campTitle: "B"),Camp(campTitle: "C")];
   }
 
   void add(){
-    state = [...state, TrainingCamp()];
+    state = [...state, Camp()];
   }
   void delete(int index) {
     state = [...state]..removeAt(index);

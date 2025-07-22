@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:training_camp_scheduling/application/state/camp_box_provider.dart';
 import 'package:training_camp_scheduling/application/state/camp_state.dart';
+import 'package:training_camp_scheduling/application/types/camp.dart';
 import 'package:training_camp_scheduling/presentation/pages/second_page.dart';
 
 class MyHomePage extends ConsumerWidget{
   const MyHomePage({super.key});
   @override
   Widget build(BuildContext context,WidgetRef ref) {
+    final campBox=ref.watch(campBoxProvider);
     final campState=ref.watch(campStateNotifierProvider);
     final theme = Theme.of(context);
     return Scaffold(
@@ -24,6 +27,8 @@ class MyHomePage extends ConsumerWidget{
             onPressed: () {
               final notifier=ref.read(campStateNotifierProvider.notifier);
               notifier.add();
+              campBox.put('1',Camp());
+              print(campBox.keys);
             },
             icon: Icon(Icons.add, size: 50, color: theme.colorScheme.primary),
           ),
@@ -67,6 +72,8 @@ class MyHomePage extends ConsumerWidget{
                           final notifier=ref.read(campStateNotifierProvider.notifier);
                           if (details.velocity.pixelsPerSecond.dx < 0){
                             notifier.delete(reversedIndex);
+                            campBox.delete('1');
+                            print(campBox.keys);
                           }
                         },
                         onTap: () {

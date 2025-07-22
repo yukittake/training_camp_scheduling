@@ -1,28 +1,28 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'training_camp.dart';
+part of 'camp.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class TrainingCampAdapter extends TypeAdapter<TrainingCamp> {
+class CampAdapter extends TypeAdapter<Camp> {
   @override
   final int typeId = 1;
 
   @override
-  TrainingCamp read(BinaryReader reader) {
+  Camp read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return TrainingCamp()
+    return Camp()
       .._campTitle = fields[0] as String
       .._bands = (fields[1] as List).cast<Band>();
   }
 
   @override
-  void write(BinaryWriter writer, TrainingCamp obj) {
+  void write(BinaryWriter writer, Camp obj) {
     writer
       ..writeByte(2)
       ..writeByte(0)
@@ -37,7 +37,7 @@ class TrainingCampAdapter extends TypeAdapter<TrainingCamp> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TrainingCampAdapter &&
+      other is CampAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
