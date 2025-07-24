@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:training_camp_scheduling/application/state/camp_box_provider.dart';
 import 'package:training_camp_scheduling/application/types/camp.dart';
 import 'package:training_camp_scheduling/domain/types/band.dart';
 part 'camp_state.g.dart';
@@ -7,28 +8,44 @@ part 'camp_state.g.dart';
 class CampStateNotifier extends _$CampStateNotifier {
   @override
    List<Camp> build() {
-    return <Camp>[Camp(campTitle: "A"),Camp(campTitle: "B"),Camp(campTitle: "C")];
+    final campBox=ref.read(campBoxProvider);
+    return campBox.values.toList();
   }
 
-  void add(){
-    state = [...state, Camp()];
+  void addCamp(){
+    final campBox=ref.read(campBoxProvider);
+    final newState=[...state, Camp()];
+    campBox.add(Camp());
+    state = newState;
   }
-  void delete(int index) {
+  void deleteCamp(int index) {
+    final campBox=ref.read(campBoxProvider);
+    final key=campBox.keyAt(index);
+    campBox.delete(key);
     state = [...state]..removeAt(index);
   }
   void updateTitle(int index,String newTitle){
+    final campBox=ref.read(campBoxProvider);
     final updated = [...state];
+    final key=campBox.keyAt(index);
     updated[index].campTitle=newTitle;
+    campBox.put(key,updated[index]);
     state=updated;
   }
   void addBand(int index) {
+    final campBox=ref.read(campBoxProvider);
+    final key=campBox.keyAt(index);
     final updated = [...state];
     updated[index].bands = [...updated[index].bands, Band()];
+    campBox.put(key,updated[index]);
     state = updated;
   }
   void addMember(int index,int bandIndex){
+    final campBox=ref.read(campBoxProvider);
+    final key=campBox.keyAt(index);
     final updated = [...state];
     updated[index].bands[bandIndex].mambers=[...updated[index].bands[bandIndex].members,""];
+    campBox.put(key,updated[index]);
     state=updated;
   }
 }
