@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:training_camp_scheduling/application/state/camp_state.dart';
+import 'package:training_camp_scheduling/domain/types/band.dart';
 
 
 class SecondPage extends ConsumerStatefulWidget {
@@ -12,16 +13,23 @@ class SecondPage extends ConsumerStatefulWidget {
 }
 
 class _SecondPageState extends ConsumerState<SecondPage> {
-  late final TextEditingController myController;
+  late final TextEditingController titleController;
+  List<TextEditingController> bandControllerList=[];
   @override
   void initState(){
     super.initState();
     final campState=ref.read(campStateNotifierProvider);
-    myController=TextEditingController(text:campState[widget.index].campTitle);
+    titleController=TextEditingController(text:campState[widget.index].campTitle);
+    for(Band temp in campState[widget.index].bands){
+      bandControllerList.add(TextEditingController(text:temp.bandTitle));
+    }
   }
   @override
   void dispose(){
-    myController.dispose();
+    titleController.dispose();
+    for(TextEditingController temp in bandControllerList){
+      temp.dispose();
+    }
     super.dispose();
   }
   @override
@@ -34,6 +42,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
       floatingActionButton:  FloatingActionButton(onPressed:(){
           final notifier=ref.read(campStateNotifierProvider.notifier);
           notifier.addBand(widget.index);
+          bandControllerList.add(TextEditingController(text:""));
         },
         shape: CircleBorder(),
         child: Icon(Icons.add,),
@@ -51,7 +60,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: TextField(
-                        controller: myController,
+                        controller: titleController,
                         onChanged: (text){
                           final notifier=ref.read(campStateNotifierProvider.notifier);
                           notifier.updateTitle(widget.index,text);
@@ -72,7 +81,13 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: TextField(),
+                        child: TextField(
+                          controller: bandControllerList[index-1],
+                          onChanged: (title){
+                            final notifier=ref.read(campStateNotifierProvider.notifier);
+                            notifier.updateBand(widget.index, index-1, title);
+                          },
+                        ),
                       ),
                     ),
                   ],
@@ -85,7 +100,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                     padding: const EdgeInsets.only(left:50),
                     child: Text("メンバー$i:"),
                   ),
-                  Expanded(child:TextFormField()),
+                  Expanded(child:TextField()),
                 ],)
               );
             }

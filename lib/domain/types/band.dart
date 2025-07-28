@@ -13,6 +13,6 @@ class Band{
   set mambers(List<String> lm) => _members=lm;
 
   Band({String? bandTitle,List<String>? members})
-    : _bandTitle=bandTitle ?? "バンド名",
+    : _bandTitle=bandTitle ?? "",
       _members=members ?? <String>[];
 }

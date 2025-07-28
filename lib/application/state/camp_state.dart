@@ -32,6 +32,14 @@ class CampStateNotifier extends _$CampStateNotifier {
     campBox.put(key,updated[index]);
     state=updated;
   }
+  void updateBand(int index,int bandIndex,String newBandTitle){
+    final campBox=ref.read(campBoxProvider);
+    final updated = [...state];
+    final key=campBox.keyAt(index);
+    updated[index].bands[bandIndex].bandTitle=newBandTitle;
+    campBox.put(key,updated[index]);
+    state=updated;
+  }
   void addBand(int index) {
     final campBox=ref.read(campBoxProvider);
     final key=campBox.keyAt(index);
