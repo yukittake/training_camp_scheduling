@@ -16,6 +16,7 @@ class CampStateNotifier extends _$CampStateNotifier {
     final campBox=ref.read(campBoxProvider);
     final newState=[...state, Camp()];
     campBox.add(Camp());
+    print('${campBox.keys}');
     state = newState;
   }
   void deleteCamp(int index) {
@@ -24,6 +25,7 @@ class CampStateNotifier extends _$CampStateNotifier {
     campBox.delete(key);
     state = [...state]..removeAt(index);
   }
+
   void updateTitle(int index,String newTitle){
     final campBox=ref.read(campBoxProvider);
     final updated = [...state];
@@ -31,6 +33,15 @@ class CampStateNotifier extends _$CampStateNotifier {
     updated[index].campTitle=newTitle;
     campBox.put(key,updated[index]);
     state=updated;
+  }
+  
+  void addBand(int index) {
+    final campBox=ref.read(campBoxProvider);
+    final key=campBox.keyAt(index);
+    final updated = [...state];
+    updated[index].bands = [...updated[index].bands, Band()];
+    campBox.put(key,updated[index]);
+    state = updated;
   }
   void updateBand(int index,int bandIndex,String newBandTitle){
     final campBox=ref.read(campBoxProvider);
@@ -40,20 +51,22 @@ class CampStateNotifier extends _$CampStateNotifier {
     campBox.put(key,updated[index]);
     state=updated;
   }
-  void addBand(int index) {
-    final campBox=ref.read(campBoxProvider);
-    final key=campBox.keyAt(index);
-    final updated = [...state];
-    updated[index].bands = [...updated[index].bands, Band()];
-    campBox.put(key,updated[index]);
-    state = updated;
-  }
+
   void addMember(int index,int bandIndex){
     final campBox=ref.read(campBoxProvider);
     final key=campBox.keyAt(index);
     final updated = [...state];
-    updated[index].bands[bandIndex].mambers=[...updated[index].bands[bandIndex].members,""];
+    updated[index].bands[bandIndex].members=[...updated[index].bands[bandIndex].members,""];
     campBox.put(key,updated[index]);
     state=updated;
   }
+  void updateMember(int index,int bandIndex,int memberIndex,String newMemberName){
+    final campBox=ref.read(campBoxProvider);
+    final updated = [...state];
+    final key=campBox.keyAt(index);
+    updated[index].bands[bandIndex].members[memberIndex]=newMemberName;
+    campBox.put(key,updated[index]);
+    state=updated;
+  }
+
 }

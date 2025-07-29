@@ -14,21 +14,27 @@ class SecondPage extends ConsumerStatefulWidget {
 
 class _SecondPageState extends ConsumerState<SecondPage> {
   late final TextEditingController titleController;
-  List<TextEditingController> bandControllerList=[];
+  List<List<TextEditingController>> bandControllerList=[]; //listの先頭がバンド名、それ以降がメンバー
   @override
   void initState(){
     super.initState();
     final campState=ref.read(campStateNotifierProvider);
     titleController=TextEditingController(text:campState[widget.index].campTitle);
     for(Band temp in campState[widget.index].bands){
-      bandControllerList.add(TextEditingController(text:temp.bandTitle));
+      List<TextEditingController> templ=[TextEditingController(text:temp.bandTitle)];
+      for(String str in temp.members){
+        templ.add(TextEditingController(text:str));
+      }
+      bandControllerList.add(templ);
     }
   }
   @override
   void dispose(){
     titleController.dispose();
-    for(TextEditingController temp in bandControllerList){
-      temp.dispose();
+    for(List<TextEditingController> tempList in bandControllerList){
+      for(TextEditingController temp in tempList){
+        temp.dispose();
+      }
     }
     super.dispose();
   }
@@ -42,7 +48,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
       floatingActionButton:  FloatingActionButton(onPressed:(){
           final notifier=ref.read(campStateNotifierProvider.notifier);
           notifier.addBand(widget.index);
-          bandControllerList.add(TextEditingController(text:""));
+          bandControllerList.add([TextEditingController(text:"")]);
         },
         shape: CircleBorder(),
         child: Icon(Icons.add,),
@@ -82,7 +88,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: TextField(
-                          controller: bandControllerList[index-1],
+                          controller: bandControllerList[index-1][0],
                           onChanged: (title){
                             final notifier=ref.read(campStateNotifierProvider.notifier);
                             notifier.updateBand(widget.index, index-1, title);
@@ -90,6 +96,9 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                         ),
                       ),
                     ),
+                    ElevatedButton(onPressed: (){
+                      
+                    }, child: Icon(Icons.delete))
                   ],
               ),
             ];
@@ -100,13 +109,23 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                     padding: const EdgeInsets.only(left:50),
                     child: Text("メンバー$i:"),
                   ),
-                  Expanded(child:TextField()),
+                  Expanded(child:TextField(
+                    controller: bandControllerList[index-1][i],
+                    onChanged: (newMemberName) {
+                      final notifier=ref.read(campStateNotifierProvider.notifier);
+                      notifier.updateMember(widget.index, index-1, i-1, newMemberName);
+                    },
+                  )),
+                  ElevatedButton(onPressed: (){
+                      
+                    }, child: Icon(Icons.delete))
                 ],)
               );
             }
             children.add(IconButton(onPressed: (){
               final notifier=ref.read(campStateNotifierProvider.notifier);
               notifier.addMember(widget.index, index-1);
+              bandControllerList[index-1].add(TextEditingController(text:""));
             }, icon: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

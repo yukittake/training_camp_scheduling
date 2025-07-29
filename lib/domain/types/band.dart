@@ -10,7 +10,7 @@ class Band{
   String get bandTitle => _bandTitle;
   List<String> get members => _members;
   set bandTitle(String s) => _bandTitle=s;
-  set mambers(List<String> lm) => _members=lm;
+  set members(List<String> lm) => _members=lm;
 
   Band({String? bandTitle,List<String>? members})
     : _bandTitle=bandTitle ?? "",
