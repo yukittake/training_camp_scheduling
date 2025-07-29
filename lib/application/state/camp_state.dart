@@ -16,7 +16,6 @@ class CampStateNotifier extends _$CampStateNotifier {
     final campBox=ref.read(campBoxProvider);
     final newState=[...state, Camp()];
     campBox.add(Camp());
-    print('${campBox.keys}');
     state = newState;
   }
   void deleteCamp(int index) {
@@ -40,6 +39,14 @@ class CampStateNotifier extends _$CampStateNotifier {
     final key=campBox.keyAt(index);
     final updated = [...state];
     updated[index].bands = [...updated[index].bands, Band()];
+    campBox.put(key,updated[index]);
+    state = updated;
+  }
+  void deleteBand(int index,int removeIndex){
+    final campBox=ref.read(campBoxProvider);
+    final key=campBox.keyAt(index);
+    final updated = [...state];
+    updated[index].bands.removeAt(removeIndex);
     campBox.put(key,updated[index]);
     state = updated;
   }

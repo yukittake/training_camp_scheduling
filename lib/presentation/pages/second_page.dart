@@ -97,7 +97,12 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                       ),
                     ),
                     ElevatedButton(onPressed: (){
-                      
+                      for(TextEditingController listCon in bandControllerList[index-1]){
+                        listCon.dispose();
+                      }
+                      bandControllerList.removeAt(index-1);
+                      final notifier=ref.read(campStateNotifierProvider.notifier);
+                      notifier.deleteBand(widget.index,index-1);
                     }, child: Icon(Icons.delete))
                   ],
               ),
