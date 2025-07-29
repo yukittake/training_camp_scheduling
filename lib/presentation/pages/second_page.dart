@@ -107,22 +107,25 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                   ],
               ),
             ];
-            for(int i=1;i<=aBand.members.length;i++){
+            for(int i=0;i<aBand.members.length;i++){
               children.add(
                 Row(children: [
                   Padding(
                     padding: const EdgeInsets.only(left:50),
-                    child: Text("メンバー$i:"),
+                    child: Text("メンバー${i+1}:"),
                   ),
                   Expanded(child:TextField(
-                    controller: bandControllerList[index-1][i],
+                    controller: bandControllerList[index-1][i+1],
                     onChanged: (newMemberName) {
                       final notifier=ref.read(campStateNotifierProvider.notifier);
-                      notifier.updateMember(widget.index, index-1, i-1, newMemberName);
+                      notifier.updateMember(widget.index, index-1, i, newMemberName);
                     },
                   )),
                   ElevatedButton(onPressed: (){
-                      
+                      bandControllerList[index-1][i+1].dispose();
+                      bandControllerList[index-1].removeAt(i+1);
+                      final notifier=ref.read(campStateNotifierProvider.notifier);
+                      notifier.deleteMember(widget.index, index-1, i);
                     }, child: Icon(Icons.delete))
                 ],)
               );

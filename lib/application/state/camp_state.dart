@@ -67,6 +67,14 @@ class CampStateNotifier extends _$CampStateNotifier {
     campBox.put(key,updated[index]);
     state=updated;
   }
+  void deleteMember(int index,int bandIndex,int removeIndex){
+    final campBox=ref.read(campBoxProvider);
+    final key=campBox.keyAt(index);
+    final updated = [...state];
+    updated[index].bands[bandIndex].members.removeAt(removeIndex);
+    campBox.put(key,updated[index]);
+    state = updated;
+  }
   void updateMember(int index,int bandIndex,int memberIndex,String newMemberName){
     final campBox=ref.read(campBoxProvider);
     final updated = [...state];
