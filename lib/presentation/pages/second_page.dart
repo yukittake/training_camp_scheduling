@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:training_camp_scheduling/application/state/camp_box_provider.dart';
 import 'package:training_camp_scheduling/application/state/camp_state.dart';
+import 'package:training_camp_scheduling/domain/features/greedy_scheduling.dart';
 import 'package:training_camp_scheduling/domain/types/band.dart';
 
 
@@ -76,6 +78,16 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                   ),
                 ],
               ),
+              ElevatedButton(onPressed: (){
+                final campList=ref.read(campStateNotifierProvider);
+                List<List<Band>> result =greedyScheduling(campList[widget.index].bands, 5);
+                for(List<Band> bandList in result){
+                  print("--------------");
+                  for(Band tempBand in bandList){
+                    print("${tempBand.bandTitle}");
+                  }
+                }
+              }, child: Text("作成開始")),
               SizedBox(width: double.infinity,height:300,child: Placeholder(),),
             ],);
           }else{
