@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:training_camp_scheduling/application/state/camp_box_provider.dart';
-import 'package:training_camp_scheduling/application/types/camp.dart';
+import 'package:training_camp_scheduling/domain/types/camp.dart';
 import 'package:training_camp_scheduling/domain/types/band.dart';
 part 'camp_state.g.dart';
 
