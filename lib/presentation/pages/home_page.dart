@@ -11,117 +11,61 @@ class MyHomePage extends ConsumerWidget{
   Widget build(BuildContext context,WidgetRef ref) {
     final campState=ref.watch(campStateNotifierProvider);
     return Scaffold(
+      backgroundColor: AppColor.white,
       appBar: AppBar(
         centerTitle: false,
         backgroundColor: AppColor.white,
+        surfaceTintColor: Colors.transparent,
         title: Text("ホーム",style:AppText.title),
         actions: [IconButton(onPressed: (){
           final notifier=ref.read(campStateNotifierProvider.notifier);
           notifier.addCamp();
         }, icon: Icon(Icons.add_circle,size: 45,color: AppColor.black,))],  
       ),
-      body: SizedBox(
-        width: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: ListView.separated(
-                  itemCount: campState.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    List<Widget> children = [];
-                    final reversedIndex = campState.length - 1 - index;
-                    if (index == 0) {
-                      children.add(
-                        Column(
-                          children: [
-                            Container(
-                              height: 10,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(20),
-                                  topRight: Radius.circular(20),
-                                ),
-                              ),
-                            ),
-                            Container(height: 1, color: Colors.grey),
-                          ],
-                        ),
-                      );
-                    }
-                    children.add(
-                      GestureDetector(
-                        onHorizontalDragEnd: (details){
-                          final notifier=ref.read(campStateNotifierProvider.notifier);
-                          if (details.velocity.pixelsPerSecond.dx < 0){
-                            notifier.deleteCamp(reversedIndex);
-                          }
-                        },
-                        onTap: () {
-                          Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => SecondPage(index:reversedIndex)),
-                        );
-                        },
-                        child: Container(
-                          color: Colors.white,
-                          height: 70,
-                          width: double.infinity,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left:15),
-                            child: Text(
-                              campState[reversedIndex].campTitle,
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ),
+      body: ListView.separated(
+        itemCount: campState.length,
+        itemBuilder: (BuildContext context, int index) {
+          final reversedIndex = campState.length - 1 - index;
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onHorizontalDragEnd: (details){
+                  final notifier=ref.read(campStateNotifierProvider.notifier);
+                  if (details.velocity.pixelsPerSecond.dx < 0){
+                    notifier.deleteCamp(reversedIndex);
+                  }
+                },
+                onTap: () {
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SecondPage(index:reversedIndex)),
+                );
+                },
+                child: Container(
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(color:AppColor.shadowLight),
+                        BoxShadow(offset:Offset(0, 3),color:AppColor.greyBack,spreadRadius: -2,blurRadius: 5)
+                      ],
+                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                    ),
+                    width: 400,
+                    height: 80,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left:18,top: 13),
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom:40,right: 15),
+                        child: Text(campState[reversedIndex].campTitle,style:AppText.subTitle),
                       ),
-                    );
-                    if (index == campState.length - 1) {
-                      children.add(
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(20),
-                              bottomRight: Radius.circular(20),
-                            ),
-                          ),
-                          child: Column(
-                          children: [
-                            Container(height: 1, color: Colors.grey),
-                            Container(
-                              height: 10,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: const BorderRadius.only(
-                                  bottomLeft: Radius.circular(20),
-                                  bottomRight: Radius.circular(20),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        ),
-                      );
-                    }
-                    return Column(children: children);
-                  },
-                  separatorBuilder: (BuildContext context, int reversedIndex) =>
-                      Container(height: 1, color: Colors.grey) 
-                      ,
-                ),
+                    ),
+                  ),
               ),
-            ),
-          ],
-        ),
+            ],
+          );
+        },
+        separatorBuilder: (BuildContext context, int reversedIndex) =>
+            Container(height: 15, color: AppColor.white)
       ),
     );
   }

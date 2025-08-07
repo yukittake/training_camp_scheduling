@@ -8,6 +8,11 @@ class AppText{
     fontFamily: AppFont.general,
     fontWeight: FontWeight.w700
   );
+  static const subTitle = TextStyle(
+    fontSize:20,
+    fontFamily: AppFont.general,
+    fontWeight: FontWeight.w700
+  );
   // static const normal = TextStyle(
   //   fontSize:18,
   //   fontFamily: AppFont.general,
