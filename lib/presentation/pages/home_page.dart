@@ -2,32 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:training_camp_scheduling/application/state/camp_state.dart';
 import 'package:training_camp_scheduling/presentation/pages/second_page.dart';
+import 'package:training_camp_scheduling/presentation/theme/colors.dart';
+import 'package:training_camp_scheduling/presentation/theme/fonts.dart';
 
 class MyHomePage extends ConsumerWidget{
   const MyHomePage({super.key});
   @override
   Widget build(BuildContext context,WidgetRef ref) {
     final campState=ref.watch(campStateNotifierProvider);
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "all",
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              final notifier=ref.read(campStateNotifierProvider.notifier);
-              notifier.addCamp();
-            },
-            icon: Icon(Icons.add, size: 50, color: theme.colorScheme.primary),
-          ),
-        ],
+        centerTitle: false,
+        backgroundColor: AppColor.white,
+        title: Text("ホーム",style:AppText.title),
+        actions: [IconButton(onPressed: (){
+          final notifier=ref.read(campStateNotifierProvider.notifier);
+          notifier.addCamp();
+        }, icon: Icon(Icons.add_circle,size: 45,color: AppColor.black,))],  
       ),
       body: SizedBox(
         width: double.infinity,

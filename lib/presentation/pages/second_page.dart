@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:training_camp_scheduling/application/state/camp_box_provider.dart';
 import 'package:training_camp_scheduling/application/state/camp_state.dart';
 import 'package:training_camp_scheduling/domain/features/greedy_scheduling.dart';
 import 'package:training_camp_scheduling/domain/types/band.dart';
@@ -45,7 +44,13 @@ class _SecondPageState extends ConsumerState<SecondPage> {
     final campState=ref.watch(campStateNotifierProvider);
     return Scaffold(
       appBar: AppBar(
-        
+        title:TextField(
+          controller: titleController,
+          onChanged: (text){
+            final notifier=ref.read(campStateNotifierProvider.notifier);
+            notifier.updateTitle(widget.index,text);
+          },
+        )
       ),
       floatingActionButton:  FloatingActionButton(onPressed:(){
           final notifier=ref.read(campStateNotifierProvider.notifier);
@@ -61,23 +66,6 @@ class _SecondPageState extends ConsumerState<SecondPage> {
         itemBuilder: (BuildContext context, int index) {
           if(index==0){
             return Column(children: [
-              Row(
-                children: [
-                  Text("タイトル:"),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        controller: titleController,
-                        onChanged: (text){
-                          final notifier=ref.read(campStateNotifierProvider.notifier);
-                          notifier.updateTitle(widget.index,text);
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
               ElevatedButton(onPressed: (){
                 final campList=ref.read(campStateNotifierProvider);
                 List<List<Band>> result =greedyScheduling(campList[widget.index].bands, 5);
@@ -87,7 +75,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                     print("${tempBand.bandTitle}");
                   }
                 }
-              }, child: Text("作成開始")),
+              }, child: Text("作成開始/空白、未入力未対応")),
               SizedBox(width: double.infinity,height:300,child: Placeholder(),),
             ],);
           }else{

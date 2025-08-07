@@ -25,8 +25,31 @@ dev_dependencies:
   riverpod_lint: ^2.3.2
   flutter_lints: ^5.0.0
 flutter:
-
   uses-material-design: true
+  assets:
+    - assets/fonts/
+
+  fonts:
+    - family: NotoSansJP
+      fonts:
+      - asset: assets/fonts/NotoSansJP/NotoSansJP-thin.ttf
+        weight: 100
+      - asset: assets/fonts/NotoSansJP/NotoSansJP-ExtraLight.ttf
+        weight: 200
+      - asset: assets/fonts/NotoSansJP/NotoSansJP-Light.ttf
+        weight: 300
+      - asset: assets/fonts/NotoSansJP/NotoSansJP-Regular.ttf
+        weight: 400
+      - asset: assets/fonts/NotoSansJP/NotoSansJP-Medium.ttf
+        weight: 500
+      - asset: assets/fonts/NotoSansJP/NotoSansJP-SemiBold.ttf
+        weight: 600
+      - asset: assets/fonts/NotoSansJP/NotoSansJP-Bold.ttf
+        weight: 700
+      - asset: assets/fonts/NotoSansJP/NotoSansJP-ExtraBold.ttf
+        weight: 800
+      - asset: assets/fonts/NotoSansJP/NotoSansJP-Black.ttf
+        weight: 900
 
 
 flutter_icons: 

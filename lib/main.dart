@@ -18,12 +18,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          primary: const Color.fromARGB(255, 68, 210, 155),
-          seedColor: const Color.fromARGB(255, 148, 212, 187),
-        ),
-      ),
       home: const MyHomePage(),
     );
   }
