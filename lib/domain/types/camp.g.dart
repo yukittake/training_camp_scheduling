@@ -18,17 +18,20 @@ class CampAdapter extends TypeAdapter<Camp> {
     };
     return Camp()
       .._campTitle = fields[0] as String
-      .._bands = (fields[1] as List).cast<Band>();
+      .._bands = (fields[1] as List).cast<Band>()
+      .._id = fields[2] as String;
   }
 
   @override
   void write(BinaryWriter writer, Camp obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj._campTitle)
       ..writeByte(1)
-      ..write(obj._bands);
+      ..write(obj._bands)
+      ..writeByte(2)
+      ..write(obj._id);
   }
 
   @override
