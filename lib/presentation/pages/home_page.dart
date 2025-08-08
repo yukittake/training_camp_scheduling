@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
 import 'package:training_camp_scheduling/application/state/camp_state.dart';
 import 'package:training_camp_scheduling/presentation/pages/second_page.dart';
 import 'package:training_camp_scheduling/presentation/theme/colors.dart';
@@ -29,37 +30,59 @@ class MyHomePage extends ConsumerWidget{
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              GestureDetector(
-                onHorizontalDragEnd: (details){
-                  final notifier=ref.read(campStateNotifierProvider.notifier);
-                  if (details.velocity.pixelsPerSecond.dx < 0){
+              ClipRRect(
+                borderRadius: BorderRadius.circular(30),
+                child: Dismissible(
+                  key:ValueKey(campState[reversedIndex].id),
+                  direction: DismissDirection.endToStart,
+                  onDismissed: (direction) {
+                    final notifier=ref.read(campStateNotifierProvider.notifier);
                     notifier.deleteCamp(reversedIndex);
-                  }
-                },
-                onTap: () {
-                  Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SecondPage(index:reversedIndex)),
-                );
-                },
-                child: Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(color:AppColor.shadowLight),
-                        BoxShadow(offset:Offset(0, 3),color:AppColor.greyBack,spreadRadius: -2,blurRadius: 5)
-                      ],
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
-                    ),
-                    width: 400,
-                    height: 80,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left:18,top: 13),
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom:40,right: 15),
-                        child: Text(campState[reversedIndex].campTitle,style:AppText.subTitle),
+                  },
+                  background: Container(
+                        decoration: BoxDecoration(
+                          color: AppColor.red,
+                          borderRadius: BorderRadius.all(Radius.circular(30)),
+                        ),
+                        width: MediaQuery.of(context).size.width*0.94,
+                        height: 80,
+                        alignment: Alignment.centerRight,
+                        padding: EdgeInsets.only(right: 20),
+                        child: Icon(Icons.delete,color:AppColor.white)
                       ),
-                    ),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SecondPage(index:reversedIndex)),
+                    );
+                    },
+                    child: Container(
+                        color: AppColor.red,
+                        width: MediaQuery.of(context).size.width*0.94,
+                        height: 80,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: AppColor.white,
+                            borderRadius: BorderRadius.all(Radius.circular(30))
+                          ),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                               BoxShadow(color:AppColor.shadowLight),
+                               BoxShadow(offset:Offset(0, 3),color:AppColor.greyBack,spreadRadius: -2,blurRadius: 5)
+                              ],
+                              borderRadius: BorderRadius.all(Radius.circular(30)),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(left:18,top: 13,bottom:40,right: 15),
+                              child: Text(campState[reversedIndex].campTitle,style:AppText.subTitle),
+                            ),
+                          ),
+                        ),
+                      ),
                   ),
+                ),
               ),
             ],
           );
