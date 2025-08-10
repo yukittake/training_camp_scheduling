@@ -10,6 +10,6 @@ class AppColor{
   static const greyBack=Color(0xFFF5F5F5);
   static const greyWidgetLine=Color(0xFFE2E4E5);
 
-  static const shadowDeep=Color(0x0C000000);
-  static const shadowLight=Color(0x40000000);
+  static const shadowLight=Color(0x0C000000); //5%
+  static const shadowDeep=Color(0x40000000); //25%
 }

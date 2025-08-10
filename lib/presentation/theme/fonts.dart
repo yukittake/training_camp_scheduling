@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:training_camp_scheduling/presentation/theme/colors.dart';
 class AppFont{
   static const general ='NotoSansJP';
 }
@@ -13,9 +14,21 @@ class AppText{
     fontFamily: AppFont.general,
     fontWeight: FontWeight.w700
   );
-  // static const normal = TextStyle(
-  //   fontSize:18,
-  //   fontFamily: AppFont.general,
-  //   fontWeight: FontWeight.w400
-  // );
+  static const normal = TextStyle(
+    fontSize:18,
+    fontFamily: AppFont.general,
+    fontWeight: FontWeight.w400
+  );
+  static const annotation = TextStyle(
+    fontSize:18,
+    fontFamily: AppFont.general,
+    fontWeight: FontWeight.w400,
+    color: AppColor.greyWidgetLine
+  );
+  static const formAnnotation = TextStyle(
+    fontSize:14,
+    fontFamily: AppFont.general,
+    fontWeight: FontWeight.w400,
+    color: AppColor.greySubString
+  );
 }
