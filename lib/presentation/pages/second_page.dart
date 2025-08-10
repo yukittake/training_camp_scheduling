@@ -122,94 +122,62 @@ class _SecondPageState extends ConsumerState<SecondPage> {
               final aBand=campState[widget.index].bands[index];
               List<Widget> children=[
                 Stack(
-                  children: [
-                    TextField(
-                      controller: _bandControllerList[index][0],
-                      onChanged: (title){
-                        final notifier=ref.read(campStateNotifierProvider.notifier);
-                        notifier.updateBand(widget.index, index, title);
-                      },
-                      style: AppText.normal,
-                      decoration: InputDecoration(
-                        labelText: "バンド名",
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color:AppColor.greyWidgetLine
-                          )
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color:AppColor.black)
-                        )
-                      ),
-                    ),
-                    Positioned(
-                      right:0,top: 0,
-                      child:GestureDetector(
-                        onTap: () {
-                          
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: BoxBorder.all(color: AppColor.greyWidgetLine,width: 2),
-                            shape: BoxShape.circle,  // 丸背景
-                          ),
-                          child: Icon(
-                            Icons.more_horiz,
-                            color: AppColor.greyWidgetLine,     // アイコン色
-                            size: 20,                // アイコンサイズ
-                          ),
-                        ),
-                      )
-                    )
-                  ]
+                  children: []
                 ),
               ];
               for(int i=0;i<aBand.members.length;i++){
                 if(i==0){
                   children.add(Padding(padding: EdgeInsetsGeometry.only(top:15)),);
-                  children.add(TextField(
-                        controller: _bandControllerList[index][i+1],
-                        onChanged: (newMemberName) {
-                          final notifier=ref.read(campStateNotifierProvider.notifier);
-                          notifier.updateMember(widget.index, index, i, newMemberName);
-                        },
-                        focusNode: (i==aBand.members.length-1) ? _focusNodeList[index] : null,
-                        style: AppText.normal,
-                        decoration: InputDecoration(
-                          hintStyle: AppText.formAnnotation,
-                          labelText: "メンバー",
-                          hintText: "メンバー１",
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color:AppColor.greyWidgetLine
+                  children.add(Padding(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: TextField(
+                          controller: _bandControllerList[index][i+1],
+                          onChanged: (newMemberName) {
+                            final notifier=ref.read(campStateNotifierProvider.notifier);
+                            notifier.updateMember(widget.index, index, i, newMemberName);
+                          },
+                          focusNode: (i==aBand.members.length-1) ? _focusNodeList[index] : null,
+                          style: AppText.normal,
+                          decoration: InputDecoration(
+                            hintStyle: AppText.formAnnotation,
+                            labelText: "メンバー",
+                            hintText: "メンバー１",
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color:AppColor.greyWidgetLine
+                              )
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color:AppColor.black)
                             )
                           ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color:AppColor.black)
-                          )
                         ),
-                      )
+                  )
                   );
                 }else{
                   children.add(Padding(padding: EdgeInsetsGeometry.only(top:3)));
                   children.add(
-                    TextField(
-                        controller: _bandControllerList[index][i+1],
-                        focusNode: (i==aBand.members.length-1) ? _focusNodeList[index] : null,
-                        onChanged: (newMemberName) {
-                          final notifier=ref.read(campStateNotifierProvider.notifier);
-                          notifier.updateMember(widget.index, index, i, newMemberName);
-                        },
-                        style: AppText.normal,
-                        decoration: InputDecoration(
-                          hintStyle: AppText.formAnnotation,
-                          hintText: "メンバー${i+1}",
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color:AppColor.greyWidgetLine
+                    Padding(
+                      padding: const EdgeInsets.only(left: 40),
+                      child: TextField(
+                          controller: _bandControllerList[index][i+1],
+                          focusNode: (i==aBand.members.length-1) ? _focusNodeList[index] : null,
+                          onChanged: (newMemberName) {
+                            final notifier=ref.read(campStateNotifierProvider.notifier);
+                            notifier.updateMember(widget.index, index, i, newMemberName);
+                          },
+                          style: AppText.normal,
+                          decoration: InputDecoration(
+                            hintStyle: AppText.formAnnotation,
+                            hintText: "メンバー${i+1}",
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color:AppColor.greyWidgetLine
+                              )
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color:AppColor.black)
                             )
                           ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color:AppColor.black)
-                          )
-                        ),
+                      ),
                     )
                   );
                 }
@@ -242,7 +210,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Container(
-                    padding: EdgeInsetsGeometry.all(30),
+                    padding: EdgeInsetsGeometry.only(top: 30,bottom: 30,right: 30),
                     decoration: BoxDecoration(
                       color: AppColor.white,
                       boxShadow: [
@@ -257,7 +225,79 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                     width: MediaQuery.of(context).size.width*0.94,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
-                      children: children
+                      children:[
+                        Stack(
+                          children: [
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: GestureDetector(
+                                    child:AnimatedRotation(
+                                      turns: aBand.open ? 0 : -0.25,
+                                      duration: const Duration(milliseconds: 200),
+                                      child: Icon(Icons.expand_more,size: 40,color: AppColor.greySubString,)
+                                    ),
+                                    onTap: (){
+                                      final notifier=ref.read(campStateNotifierProvider.notifier);
+                                      notifier.turnOpen(widget.index, index);
+                                    },
+                                  ),
+                                ),
+                                Expanded(
+                                  child: TextField(
+                                    controller: _bandControllerList[index][0],
+                                    onChanged: (title){
+                                      final notifier=ref.read(campStateNotifierProvider.notifier);
+                                      notifier.updateBand(widget.index, index, title);
+                                    },
+                                    style: AppText.normal,
+                                    decoration: InputDecoration(
+                                      labelText: "バンド名",
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color:AppColor.greyWidgetLine
+                                        )
+                                      ),
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color:AppColor.black)
+                                      )
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Positioned(
+                              right:0,top: 0,
+                              child:GestureDetector(
+                                onTap: () {
+                                  
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: BoxBorder.all(color: AppColor.greyWidgetLine,width: 2),
+                                    shape: BoxShape.circle,  // 丸背景
+                                  ),
+                                  child: Icon(
+                                    Icons.more_horiz,
+                                    color: AppColor.greyWidgetLine,     // アイコン色
+                                    size: 20,                // アイコンサイズ
+                                  ),
+                                ),
+                              )
+                            )
+                          ]
+                        ),
+                        AnimatedSize(
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeInOut,
+                          child:ClipRect(
+                            child: Align(
+                              heightFactor: aBand.open ? 1 : 0,
+                              child: Column(mainAxisSize: MainAxisSize.min,children: children,),
+                            )
+                          )
+                        )
+                      ]
                     ),
                   ),
                 ),

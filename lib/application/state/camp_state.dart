@@ -84,4 +84,12 @@ class CampStateNotifier extends _$CampStateNotifier {
     state=updated;
   }
 
+  void turnOpen(int index,int bandIndex){
+    final campBox=ref.read(campBoxProvider);
+    final updated = [...state];
+    final key=campBox.keyAt(index);
+    updated[index].bands[bandIndex].open=!updated[index].bands[bandIndex].open;
+    campBox.put(key,updated[index]);
+    state=updated;
+  }
 }
