@@ -15,27 +15,30 @@ class SecondPage extends ConsumerStatefulWidget {
 }
 
 class _SecondPageState extends ConsumerState<SecondPage> {
-  late final TextEditingController titleController;
-  List<List<TextEditingController>> bandControllerList=[]; //listの先頭がバンド名、それ以降がメンバー
+  late final TextEditingController _titleController;
+  final List<List<TextEditingController>> _bandControllerList=[]; //listの先頭がバンド名、それ以降がメンバー
+  late final ScrollController _scrollController;
   int currentPageIndex=0;
 
   @override
   void initState(){
     super.initState();
     final campState=ref.read(campStateNotifierProvider);
-    titleController=TextEditingController(text:campState[widget.index].campTitle);
+    _scrollController=ScrollController();
+    _titleController=TextEditingController(text:campState[widget.index].campTitle);
     for(Band temp in campState[widget.index].bands){
       List<TextEditingController> templ=[TextEditingController(text:temp.bandTitle)];
       for(String str in temp.members){
         templ.add(TextEditingController(text:str));
       }
-      bandControllerList.add(templ);
+      _bandControllerList.add(templ);
     }
   }
   @override
   void dispose(){
-    titleController.dispose();
-    for(List<TextEditingController> tempList in bandControllerList){
+    _scrollController.dispose();
+    _titleController.dispose();
+    for(List<TextEditingController> tempList in _bandControllerList){
       for(TextEditingController temp in tempList){
         temp.dispose();
       }
@@ -60,7 +63,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
             decoration: const InputDecoration(
               border: InputBorder.none
             ),
-            controller: titleController,
+            controller: _titleController,
             style:AppText.title,
             onChanged: (text){
               final notifier=ref.read(campStateNotifierProvider.notifier);
@@ -70,7 +73,14 @@ class _SecondPageState extends ConsumerState<SecondPage> {
           actions: [IconButton(onPressed: (){
             final notifier=ref.read(campStateNotifierProvider.notifier);
             notifier.addBand(widget.index);
-            bandControllerList.add([TextEditingController(text:"")]);
+            _bandControllerList.add([TextEditingController(text:"")]);
+            WidgetsBinding.instance.addPostFrameCallback((_){
+              _scrollController.animateTo(
+                _scrollController.position.maxScrollExtent,
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeInOutCubic
+              );
+            });
           }, icon: Icon(Icons.add_circle,size: 45,color: AppColor.black,))], 
         ),
         bottomNavigationBar: NavigationBar(
@@ -99,6 +109,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
         body:[
           if(campState[widget.index].bands.isEmpty) Center(child: Text("＋でバンドを追加",style:AppText.annotation,))
           else ListView.separated(
+            controller: _scrollController,
             itemCount: campState[widget.index].bands.length,
             itemBuilder: (BuildContext context, int index){
               final aBand=campState[widget.index].bands[index];
@@ -106,7 +117,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                 Stack(
                   children: [
                     TextField(
-                      controller: bandControllerList[index][0],
+                      controller: _bandControllerList[index][0],
                       onChanged: (title){
                         final notifier=ref.read(campStateNotifierProvider.notifier);
                         notifier.updateBand(widget.index, index, title);
@@ -149,7 +160,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                 if(i==0){
                   children.add(Padding(padding: EdgeInsetsGeometry.only(top:15)),);
                   children.add(TextField(
-                        controller: bandControllerList[index][i+1],
+                        controller: _bandControllerList[index][i+1],
                         onChanged: (newMemberName) {
                           final notifier=ref.read(campStateNotifierProvider.notifier);
                           notifier.updateMember(widget.index, index, i, newMemberName);
@@ -173,7 +184,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                   children.add(Padding(padding: EdgeInsetsGeometry.only(top:3)));
                   children.add(
                     TextField(
-                        controller: bandControllerList[index][i+1],
+                        controller: _bandControllerList[index][i+1],
                         onChanged: (newMemberName) {
                           final notifier=ref.read(campStateNotifierProvider.notifier);
                           notifier.updateMember(widget.index, index, i, newMemberName);
@@ -198,7 +209,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                 IconButton(onPressed: (){
                   final notifier=ref.read(campStateNotifierProvider.notifier);
                   notifier.addMember(widget.index, index);
-                  bandControllerList[index].add(TextEditingController(text:""));
+                  _bandControllerList[index].add(TextEditingController(text:""));
                 }, icon: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -207,23 +218,26 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                 ))
               );
               return Align(
-                child: Container(
-                  padding: EdgeInsetsGeometry.all(30),
-                  decoration: BoxDecoration(
-                    color: AppColor.white,
-                    boxShadow: [
-                      BoxShadow(color: AppColor.shadowDeep,blurRadius: 4,offset: Offset(-4,4))
-                    ],
-                    border: Border.all(
-                      color:AppColor.greyWidgetLine,
-                      width:3
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Container(
+                    padding: EdgeInsetsGeometry.all(30),
+                    decoration: BoxDecoration(
+                      color: AppColor.white,
+                      boxShadow: [
+                        BoxShadow(color: AppColor.shadowDeep,blurRadius: 4,offset: Offset(-4,4))
+                      ],
+                      border: Border.all(
+                        color:AppColor.greyWidgetLine,
+                        width:3
+                      ),
+                      borderRadius: BorderRadius.circular(30)
                     ),
-                    borderRadius: BorderRadius.circular(30)
-                  ),
-                  width: MediaQuery.of(context).size.width*0.94,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: children
+                    width: MediaQuery.of(context).size.width*0.94,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: children
+                    ),
                   ),
                 ),
               );
