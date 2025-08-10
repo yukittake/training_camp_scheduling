@@ -220,8 +220,16 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                   notifier.addMember(widget.index, index);
                   _bandControllerList[index].add(TextEditingController(text:""));
                   _focusNodeList[index].unfocus();
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) async{
                     _focusNodeList[index].requestFocus();
+                    final delta=50;
+                    Future.delayed(Duration(milliseconds: 1000),(){
+                      _scrollController.animateTo(
+                      (_scrollController.offset+delta).clamp(0,_scrollController.position.maxScrollExtent),
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.easeInOutCubic
+                      );
+                    });
                   });
                 }, icon: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
