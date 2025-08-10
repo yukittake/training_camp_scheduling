@@ -17,7 +17,9 @@ class SecondPage extends ConsumerStatefulWidget {
 class _SecondPageState extends ConsumerState<SecondPage> {
   late final TextEditingController _titleController;
   final List<List<TextEditingController>> _bandControllerList=[]; //listの先頭がバンド名、それ以降がメンバー
+  final List<FocusNode> _focusNodeList=[];
   late final ScrollController _scrollController;
+
   int currentPageIndex=0;
 
   @override
@@ -28,6 +30,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
     _titleController=TextEditingController(text:campState[widget.index].campTitle);
     for(Band temp in campState[widget.index].bands){
       List<TextEditingController> templ=[TextEditingController(text:temp.bandTitle)];
+      _focusNodeList.add(FocusNode());
       for(String str in temp.members){
         templ.add(TextEditingController(text:str));
       }
@@ -38,6 +41,9 @@ class _SecondPageState extends ConsumerState<SecondPage> {
   void dispose(){
     _scrollController.dispose();
     _titleController.dispose();
+    for(FocusNode temp in _focusNodeList){
+      temp.dispose();
+    }
     for(List<TextEditingController> tempList in _bandControllerList){
       for(TextEditingController temp in tempList){
         temp.dispose();
@@ -74,6 +80,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
             final notifier=ref.read(campStateNotifierProvider.notifier);
             notifier.addBand(widget.index);
             _bandControllerList.add([TextEditingController(text:"")]);
+            _focusNodeList.add(FocusNode());
             WidgetsBinding.instance.addPostFrameCallback((_){
               _scrollController.animateTo(
                 _scrollController.position.maxScrollExtent,
@@ -165,6 +172,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                           final notifier=ref.read(campStateNotifierProvider.notifier);
                           notifier.updateMember(widget.index, index, i, newMemberName);
                         },
+                        focusNode: (i==aBand.members.length-1) ? _focusNodeList[index] : null,
                         style: AppText.normal,
                         decoration: InputDecoration(
                           hintStyle: AppText.formAnnotation,
@@ -185,6 +193,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                   children.add(
                     TextField(
                         controller: _bandControllerList[index][i+1],
+                        focusNode: (i==aBand.members.length-1) ? _focusNodeList[index] : null,
                         onChanged: (newMemberName) {
                           final notifier=ref.read(campStateNotifierProvider.notifier);
                           notifier.updateMember(widget.index, index, i, newMemberName);
@@ -210,6 +219,10 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                   final notifier=ref.read(campStateNotifierProvider.notifier);
                   notifier.addMember(widget.index, index);
                   _bandControllerList[index].add(TextEditingController(text:""));
+                  _focusNodeList[index].unfocus();
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _focusNodeList[index].requestFocus();
+                  });
                 }, icon: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
