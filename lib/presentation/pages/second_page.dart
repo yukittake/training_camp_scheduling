@@ -209,12 +209,14 @@ class _SecondPageState extends ConsumerState<SecondPage> {
               return Align(
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 8),
-                  child: Container(
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    curve:Curves.easeInOut,
                     padding: EdgeInsetsGeometry.only(top: 30,bottom: 30,right: 30),
                     decoration: BoxDecoration(
                       color: AppColor.white,
                       boxShadow: [
-                        BoxShadow(color: AppColor.shadowDeep,blurRadius: 4,offset: Offset(-4,4))
+                        BoxShadow(color: AppColor.shadowDeep,blurRadius: 4,offset: aBand.open ? Offset(-4,4) : Offset(-8,8))
                       ],
                       border: Border.all(
                         color:AppColor.greyWidgetLine,
