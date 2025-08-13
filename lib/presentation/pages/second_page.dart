@@ -18,9 +18,91 @@ class _SecondPageState extends ConsumerState<SecondPage> {
   late final TextEditingController _titleController;
   final List<List<TextEditingController>> _bandControllerList=[]; //listの先頭がバンド名、それ以降がメンバー
   final List<FocusNode> _focusNodeList=[];
+  final List<LayerLink> _links=[];
   late final ScrollController _scrollController;
+  OverlayEntry? _overlayEntry;
 
   int currentPageIndex=0;
+  void _removeDeleteOverlay(){
+    _overlayEntry?.remove();
+    _overlayEntry?.dispose();
+    _overlayEntry = null;
+  }
+  void _createDeleteOverlay(int bandIndex,int members){
+    const padding=8.0;
+    const margin=5.0;
+    _removeDeleteOverlay();
+    _overlayEntry = OverlayEntry(builder: (context) {
+
+      return Stack(
+        children: [
+          GestureDetector(onTap: ()=>_removeDeleteOverlay(),child: Container(color:AppColor.transparent)),
+          CompositedTransformFollower(
+            link: _links[bandIndex],
+            offset: Offset(-120,-30),
+            child: SafeArea(
+              child:  Container(
+                decoration: BoxDecoration(
+                  color: AppColor.white,
+                  boxShadow: [
+                    BoxShadow(color: AppColor.shadowDeep,blurRadius: 4,offset: Offset(-4,4))
+                  ],
+                  border: Border.all(
+                    color:AppColor.greyWidgetLine,
+                    width:1
+                  ),
+                  borderRadius: BorderRadius.circular(30)
+                ),
+                height: 40*(members+1)+padding*2+margin, //text:39pixel + divider(container) 1pixel
+                width: 150,
+                child: Padding(
+                  padding: const EdgeInsets.all(padding),
+                  child: ListView.separated(
+                        physics: const NeverScrollableScrollPhysics(), 
+                        itemCount: members+1,
+                        itemBuilder: (BuildContext context,int index){
+                          return GestureDetector(
+                            onTap: (){
+                              final notifier=ref.read(campStateNotifierProvider.notifier);
+                              if(index==members){
+                                notifier.deleteBand(widget.index, bandIndex);
+                                for(TextEditingController temp in _bandControllerList[bandIndex]){
+                                  temp.dispose();
+                                }
+                                _bandControllerList.removeAt(bandIndex);
+                                _links.removeAt(bandIndex);
+                                _focusNodeList[bandIndex].dispose();
+                                _focusNodeList.removeAt(bandIndex);
+                              }else{
+                                notifier.deleteMember(widget.index, bandIndex, index);
+                                _bandControllerList[bandIndex][index+1].dispose();
+                                _bandControllerList[bandIndex].removeAt(index+1);
+                              }
+                              _removeDeleteOverlay();
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 10.0,bottom: 10.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(index==members ? "バンドを削除" : "メンバー${index+1}を削除",style:AppText.delete),
+                                  Icon(index==members ? Icons.delete : Icons.person,size: 19,color: AppColor.red,)
+                                ],
+                              ),
+                            ),
+                          );
+                        }, 
+                        separatorBuilder: (BuildContext context,int index)=>Container(height: 1,color: AppColor.greyWidgetLine,)
+                  ),
+                ),
+              )
+            )
+          )
+        ],
+      );
+    },);
+    Overlay.of(context,debugRequiredFor: widget).insert(_overlayEntry!);
+  }
 
   @override
   void initState(){
@@ -31,6 +113,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
     for(Band temp in campState[widget.index].bands){
       List<TextEditingController> templ=[TextEditingController(text:temp.bandTitle)];
       _focusNodeList.add(FocusNode());
+      _links.add(LayerLink());
       for(String str in temp.members){
         templ.add(TextEditingController(text:str));
       }
@@ -49,6 +132,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
         temp.dispose();
       }
     }
+    _removeDeleteOverlay();
     super.dispose();
   }
   @override
@@ -79,8 +163,11 @@ class _SecondPageState extends ConsumerState<SecondPage> {
           actions: [IconButton(onPressed: (){
             final notifier=ref.read(campStateNotifierProvider.notifier);
             notifier.addBand(widget.index);
+
             _bandControllerList.add([TextEditingController(text:"")]);
             _focusNodeList.add(FocusNode());
+            _links.add(LayerLink());
+
             WidgetsBinding.instance.addPostFrameCallback((_){
               _scrollController.animateTo(
                 _scrollController.position.maxScrollExtent,
@@ -120,11 +207,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
             itemCount: campState[widget.index].bands.length,
             itemBuilder: (BuildContext context, int index){
               final aBand=campState[widget.index].bands[index];
-              List<Widget> children=[
-                Stack(
-                  children: []
-                ),
-              ];
+              List<Widget> children=[];
               for(int i=0;i<aBand.members.length;i++){
                 if(i==0){
                   children.add(Padding(padding: EdgeInsetsGeometry.only(top:15)),);
@@ -270,19 +353,26 @@ class _SecondPageState extends ConsumerState<SecondPage> {
                             ),
                             Positioned(
                               right:0,top: 0,
-                              child:GestureDetector(
-                                onTap: () {
-                                  
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: BoxBorder.all(color: AppColor.greyWidgetLine,width: 2),
-                                    shape: BoxShape.circle,  // 丸背景
-                                  ),
-                                  child: Icon(
-                                    Icons.more_horiz,
-                                    color: AppColor.greyWidgetLine,     // アイコン色
-                                    size: 20,                // アイコンサイズ
+                              child:CompositedTransformTarget(
+                                link: _links[index],
+                                child: GestureDetector(
+                                  onTap: () {
+                                    if(_overlayEntry == null){
+                                      _createDeleteOverlay(index,campState[widget.index].bands[index].members.length);
+                                    }else{
+                                      _removeDeleteOverlay();
+                                    }
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: BoxBorder.all(color: AppColor.greyWidgetLine,width: 2),
+                                      shape: BoxShape.circle,  // 丸背景
+                                    ),
+                                    child: Icon(
+                                      Icons.more_horiz,
+                                      color: AppColor.greyWidgetLine,     // アイコン色
+                                      size: 20,                // アイコンサイズ
+                                    ),
                                   ),
                                 ),
                               )
@@ -307,103 +397,6 @@ class _SecondPageState extends ConsumerState<SecondPage> {
             },
             separatorBuilder: (BuildContext context, int index) => const Padding(padding: EdgeInsets.only(top: 30),),
           )
-
-
-
-
-
-
-
-
-
-        //   ListView.separated(
-        //   padding: const EdgeInsets.all(8),
-        //   itemCount: campState[widget.index].bands.length+1,//初めのウィジェット分プラス１
-        //   itemBuilder: (BuildContext context, int index) {
-        //     if(index==0){
-        //       return Column(children: [
-        //         ElevatedButton(onPressed: (){
-        //           final campList=ref.read(campStateNotifierProvider);
-        //           List<List<Band>> result =greedyScheduling(campList[widget.index].bands, 5);
-        //           for(List<Band> bandList in result){
-        //             print("--------------");
-        //             for(Band tempBand in bandList){
-        //               print("${tempBand.bandTitle}");
-        //             }
-        //           }
-        //         }, child: Text("作成開始/空白、未入力未対応")),
-        //         SizedBox(width: double.infinity,height:300,child: Placeholder(),),
-        //       ],);
-        //     }else{
-        //       final aBand=campState[widget.index].bands[index-1];
-        //       List <Widget>children=[
-        //         Row(
-        //             children: [
-        //               Text("バンド名:"),
-        //               Expanded(
-        //                 child: Padding(
-        //                   padding: const EdgeInsets.all(8.0),
-        //                   child: TextField(
-        //                     controller: bandControllerList[index-1][0],
-        //                     onChanged: (title){
-        //                       final notifier=ref.read(campStateNotifierProvider.notifier);
-        //                       notifier.updateBand(widget.index, index-1, title);
-        //                     },
-        //                   ),
-        //                 ),
-        //               ),
-        //               ElevatedButton(onPressed: (){
-        //                 for(TextEditingController listCon in bandControllerList[index-1]){
-        //                   listCon.dispose();
-        //                 }
-        //                 bandControllerList.removeAt(index-1);
-        //                 final notifier=ref.read(campStateNotifierProvider.notifier);
-        //                 notifier.deleteBand(widget.index,index-1);
-        //               }, child: Icon(Icons.delete))
-        //             ],
-        //         ),
-        //       ];
-        //       for(int i=0;i<aBand.members.length;i++){
-        //         children.add(
-        //           Row(children: [
-        //             Padding(
-        //               padding: const EdgeInsets.only(left:50),
-        //               child: Text("メンバー${i+1}:"),
-        //             ),
-        //             Expanded(child:TextField(
-        //               controller: bandControllerList[index-1][i+1],
-        //               onChanged: (newMemberName) {
-        //                 final notifier=ref.read(campStateNotifierProvider.notifier);
-        //                 notifier.updateMember(widget.index, index-1, i, newMemberName);
-        //               },
-        //             )),
-        //             ElevatedButton(onPressed: (){
-        //                 bandControllerList[index-1][i+1].dispose();
-        //                 bandControllerList[index-1].removeAt(i+1);
-        //                 final notifier=ref.read(campStateNotifierProvider.notifier);
-        //                 notifier.deleteMember(widget.index, index-1, i);
-        //               }, child: Icon(Icons.delete))
-        //           ],)
-        //         );
-        //       }
-        //       children.add(IconButton(onPressed: (){
-        //         final notifier=ref.read(campStateNotifierProvider.notifier);
-        //         notifier.addMember(widget.index, index-1);
-        //         bandControllerList[index-1].add(TextEditingController(text:""));
-        //       }, icon: Row(
-        //         mainAxisAlignment: MainAxisAlignment.center,
-        //         children: [
-        //           Icon(Icons.add),
-        //           Text("メンバーを追加")
-        //         ],
-        //       )));
-        //       return Column(children: children);
-        //     }
-            
-              
-        //   },  
-        //   separatorBuilder: (BuildContext context, int index) => const Divider(),
-        // )
         ,
         Column(
           children: [

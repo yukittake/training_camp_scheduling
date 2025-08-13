@@ -4,6 +4,7 @@ class AppColor{
   static const white=Colors.white;
   static const black=Colors.black;
   static const red=Color(0xFFBE3032);
+  static const transparent=Colors.transparent;
 
   static const greyMainString=Color(0xFF7C7C7C);
   static const greySubString=Color(0xFF848484);
