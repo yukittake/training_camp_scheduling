@@ -6,7 +6,7 @@ part of 'camp_state.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$campStateNotifierHash() => r'1624e2f554aba1339a5e30f642723e0af8a1a603';
+String _$campStateNotifierHash() => r'f9c006238dd9de16298296f0573bf6615f448aff';
 
 /// See also [CampStateNotifier].
 @ProviderFor(CampStateNotifier)

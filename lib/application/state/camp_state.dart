@@ -92,4 +92,13 @@ class CampStateNotifier extends _$CampStateNotifier {
     campBox.put(key,updated[index]);
     state=updated;
   }
+
+  void updateRooms(int index,int newRooms){
+    final campBox=ref.read(campBoxProvider);
+    final updated = [...state];
+    final key=campBox.keyAt(index);
+    updated[index].rooms=newRooms;
+    campBox.put(key,updated[index]);
+    state=updated;
+  }
 }

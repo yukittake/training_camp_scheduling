@@ -5,6 +5,7 @@ import 'package:training_camp_scheduling/domain/types/band.dart';
 import 'package:training_camp_scheduling/presentation/theme/colors.dart';
 import 'package:training_camp_scheduling/presentation/theme/fonts.dart';
 import 'package:training_camp_scheduling/presentation/widgets/delete_overlay_widget.dart';
+import 'package:training_camp_scheduling/presentation/widgets/first_schedule_widget.dart';
 import 'package:training_camp_scheduling/presentation/widgets/manage_band_widget.dart';
 import 'package:training_camp_scheduling/presentation/widgets/second_page_app_bar.dart';
 
@@ -108,6 +109,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
           ],
         ),
         body:[
+        //バンド管理
           if(campState[widget.index].bands.isEmpty) Center(child: Text("＋でバンドを追加",style:AppText.annotation,))
           else ListView.separated(
             controller: _scrollController,
@@ -119,12 +121,9 @@ class _SecondPageState extends ConsumerState<SecondPage> {
             separatorBuilder: (BuildContext context, int index) => const Padding(padding: EdgeInsets.only(top: 30),),
           )
         ,
-        Column(
-          children: [
-            Text("hi",),
-            Text("hi")
-          ],
-        )
+        //スケジューリング
+          if(campState[widget.index].schedule.isEmpty) FirstScheduleWidget(index: widget.index,rooms: campState[widget.index].rooms,)
+          else Text("hello")
         ][_currentPageIndex]
       ),
     );

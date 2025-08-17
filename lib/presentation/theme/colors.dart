@@ -4,6 +4,7 @@ class AppColor{
   static const white=Colors.white;
   static const black=Colors.black;
   static const red=Color(0xFFBE3032);
+  static const lightBlue=Color(0xFF4EC4FF);
   static const transparent=Colors.transparent;
 
   static const greyMainString=Color(0xFF7C7C7C);
@@ -13,4 +14,5 @@ class AppColor{
 
   static const shadowLight=Color(0x0C000000); //5%
   static const shadowDeep=Color(0x40000000); //25%
+  static const shadowBlue=Color(0x404EC4FF); //25%
 }

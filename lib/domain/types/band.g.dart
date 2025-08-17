@@ -18,17 +18,20 @@ class BandAdapter extends TypeAdapter<Band> {
     };
     return Band()
       .._bandTitle = fields[0] as String
-      .._members = (fields[1] as List).cast<String>();
+      .._members = (fields[1] as List).cast<String>()
+      .._open = fields[2] as bool;
   }
 
   @override
   void write(BinaryWriter writer, Band obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj._bandTitle)
       ..writeByte(1)
-      ..write(obj._members);
+      ..write(obj._members)
+      ..writeByte(2)
+      ..write(obj._open);
   }
 
   @override

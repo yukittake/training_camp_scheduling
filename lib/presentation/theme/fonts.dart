@@ -17,6 +17,13 @@ class AppText{
   static const normal = TextStyle(
     fontSize:18,
     fontFamily: AppFont.general,
+    fontWeight: FontWeight.w400,
+    color: AppColor.black,
+    decoration: TextDecoration.none,
+  );
+  static const smaller = TextStyle(
+    fontSize:14,
+    fontFamily: AppFont.general,
     fontWeight: FontWeight.w400
   );
   static const annotation = TextStyle(
@@ -37,5 +44,11 @@ class AppText{
     fontWeight: FontWeight.w400,
     color:AppColor.red,
     decoration: TextDecoration.none,
+  );
+  static const smallWhite = TextStyle(
+    fontSize: 13,
+    fontFamily: AppFont.general,
+    fontWeight: FontWeight.w400,
+    color: AppColor.white
   );
 }
