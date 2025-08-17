@@ -101,4 +101,13 @@ class CampStateNotifier extends _$CampStateNotifier {
     campBox.put(key,updated[index]);
     state=updated;
   }
+
+  void updateSchedule(int index,List<List<Band>> newSchedule){
+    final campBox=ref.read(campBoxProvider);
+    final updated = [...state];
+    final key=campBox.keyAt(index);
+    updated[index].schedule=newSchedule;
+    campBox.put(key,updated[index]);
+    state=updated;
+  }
 }

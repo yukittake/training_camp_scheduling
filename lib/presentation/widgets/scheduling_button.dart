@@ -1,16 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:training_camp_scheduling/application/usecases/make_schedule.dart';
+import 'package:training_camp_scheduling/domain/types/band.dart';
 import 'package:training_camp_scheduling/presentation/theme/colors.dart';
 import 'package:training_camp_scheduling/presentation/theme/fonts.dart';
 
 class SchedulingButton extends ConsumerWidget {
-  const SchedulingButton({
-    super.key,
-  });
+  final int _rooms;
+  final List<Band> _bands;
+  final int _index;
+  final List<List<TextEditingController>> _bandControllerList;
+  const SchedulingButton({super.key,required rooms,required bands,required index,required bandControllerList}):
+          _rooms=rooms,
+          _bands=bands,
+          _index=index,
+          _bandControllerList=bandControllerList;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return FilledButton(onPressed: (){},style:FilledButton.styleFrom(backgroundColor: AppColor.lightBlue,textStyle: AppText.smallWhite,),
+    return FilledButton(onPressed: (){
+      try{
+        final tempBool=makeSchedule(_rooms, _bands, ref, _index, _bandControllerList);
+        if(tempBool){
+          print("空白のメンバーを削除しました");
+          //dialogs
+        }
+      }catch(e){
+        print("$e"); //dialogs
+      }
+    },style:FilledButton.styleFrom(backgroundColor: AppColor.lightBlue,textStyle: AppText.smallWhite,),
       child: SizedBox(
         width: 140,
         child: Row(
@@ -25,20 +43,3 @@ class SchedulingButton extends ConsumerWidget {
     );
   }
 }
-
-
-// if(index==0){
-//               return Column(children: [
-//                 ElevatedButton(onPressed: (){
-//                   final campList=ref.read(campStateNotifierProvider);
-//                   List<List<Band>> result =greedyScheduling(campList[widget.index].bands, 5);
-//                   for(List<Band> bandList in result){
-//                     print("--------------");
-//                     for(Band tempBand in bandList){
-//                       print("${tempBand.bandTitle}");
-//                     }
-//                   }
-//                 }, child: Text("作成開始/空白、未入力未対応")),
-//                 SizedBox(width: double.infinity,height:300,child: Placeholder(),),
-//               ],);
-//             }

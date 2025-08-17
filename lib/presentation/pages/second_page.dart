@@ -122,7 +122,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
           )
         ,
         //スケジューリング
-          if(campState[widget.index].schedule.isEmpty) FirstScheduleWidget(index: widget.index,rooms: campState[widget.index].rooms,)
+          if(campState[widget.index].schedule.isEmpty) FirstScheduleWidget(bands: campState[widget.index].bands,index: widget.index,rooms: campState[widget.index].rooms,bandControllerList: _bandControllerList,)
           else Text("hello")
         ][_currentPageIndex]
       ),
