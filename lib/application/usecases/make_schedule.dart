@@ -1,37 +1,41 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:training_camp_scheduling/application/state/camp_state.dart';
-import 'package:training_camp_scheduling/domain/features/greedy_scheduling.dart';
-import 'package:training_camp_scheduling/domain/features/search_empty_member.dart';
-import 'package:training_camp_scheduling/domain/features/search_empty_title.dart';
-import 'package:training_camp_scheduling/domain/types/band.dart';
-import 'package:training_camp_scheduling/domain/types/bandtitle_exception.dart';
-import 'package:training_camp_scheduling/domain/types/no_bands_exception.dart';
+import 'package:training_camp_scheduling/application/usecases/delete_member.dart';
+import 'package:training_camp_scheduling/application/usecases/update_schedule.dart';
+import 'package:training_camp_scheduling/domain/entities/band.dart';
+import 'package:training_camp_scheduling/domain/entities/camp.dart';
+import 'package:training_camp_scheduling/domain/entities/exception_bandtitle.dart';
+import 'package:training_camp_scheduling/domain/entities/exception_no_bands.dart';
+import 'package:training_camp_scheduling/domain/repositories/camp_repository.dart';
 
-bool makeSchedule(int rooms,List<Band> bands,WidgetRef ref,int campIndex,final List<List<TextEditingController>> bandControllerList){
-  bool hasEmptyMember=false;
-  if(bands.isEmpty){
-    throw NoBandsException("バンドが存在しません");
-  }
-  final emptyTitleIndex=searchEmptyTitle(bands);
-  if(emptyTitleIndex.isNotEmpty){
-    throw BandtitleException("バンド名が未記入のものがあります",emptyTitleIndex);
-  }
+class MakeSchedule {
+  final CampRepository repo;
+  MakeSchedule(this.repo);
 
-  //空白のメンバーを消す
-  final notifier=ref.read(campStateNotifierProvider.notifier);
-  List<List<int>> emptyMemberIndex=searchEmptyMember(bands);
-  if(emptyMemberIndex.isNotEmpty){
-    hasEmptyMember=true;
-    for(List<int> emptys in emptyMemberIndex){
-      notifier.deleteMember(campIndex, emptys[0], emptys[1]);
-      bandControllerList[emptys[0]][emptys[1]+1].dispose();
-      bandControllerList[emptys[0]].removeAt(emptys[1]+1);
+  List<List<int>> call(Camp camp){
+    final newCamp=camp.copyWith();
+    if(camp.bands.isEmpty){
+      throw NoBandsException("バンドが存在しません");
     }
-  }
+    final emptyBandTitleIndex=camp.emptyBandTitleIndex();
+    if(emptyBandTitleIndex.isNotEmpty){
+      throw BandtitleException("バンド名が未記入のものがあります",emptyBandTitleIndex);
+    }
 
-  //実行
-  List<List<Band>> result =greedyScheduling(bands,rooms);
-  notifier.updateSchedule(campIndex,result);
-  return hasEmptyMember;
+    //空白のメンバーを消す
+    List<List<int>> emptyMemberIndex=camp.emptyMemberIndex();
+    final deleteMember=DeleteMember(repo);
+    if(emptyMemberIndex.isNotEmpty){
+      for(int i=emptyMemberIndex.length-1;i>=0;i--){ //一個消したらずれる？
+        for(int j=emptyMemberIndex[i].length-1;j>=0;j--){
+          deleteMember(camp,i,emptyMemberIndex[i][j]);
+          newCamp.bands[i].members.removeAt(emptyMemberIndex[i][j]);
+        }
+      }
+    }
+
+    //実装
+    List<List<Band>> result =newCamp.greedyScheduling();
+    final updateSchedule=UpdateSchedule(repo);
+    updateSchedule(camp,result);
+    return emptyMemberIndex; //消したbandindexとmemberindexがわかるようにreturn 
+  }
 }

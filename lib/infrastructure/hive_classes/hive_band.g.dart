@@ -1,29 +1,30 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'band.dart';
+part of 'hive_band.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class BandAdapter extends TypeAdapter<Band> {
+class HiveBandAdapter extends TypeAdapter<HiveBand> {
   @override
   final int typeId = 0;
 
   @override
-  Band read(BinaryReader reader) {
+  HiveBand read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Band()
-      .._bandTitle = fields[0] as String
-      .._members = (fields[1] as List).cast<String>()
-      .._open = fields[2] as bool;
+    return HiveBand(
+      bandTitle: fields[0] as String,
+      members: (fields[1] as List).cast<String>(),
+      open: fields[2] as bool,
+    );
   }
 
   @override
-  void write(BinaryWriter writer, Band obj) {
+  void write(BinaryWriter writer, HiveBand obj) {
     writer
       ..writeByte(3)
       ..writeByte(0)
@@ -40,7 +41,7 @@ class BandAdapter extends TypeAdapter<Band> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is BandAdapter &&
+      other is HiveBandAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

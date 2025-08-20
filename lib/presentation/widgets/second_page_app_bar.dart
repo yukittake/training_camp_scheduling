@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:training_camp_scheduling/application/state/camp_state.dart';
+import 'package:training_camp_scheduling/presentation/state/camp_state.dart';
 import 'package:training_camp_scheduling/presentation/theme/colors.dart';
 import 'package:training_camp_scheduling/presentation/theme/fonts.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SecondPageAppBar extends ConsumerWidget implements PreferredSizeWidget {
   const SecondPageAppBar({
@@ -41,13 +41,15 @@ class SecondPageAppBar extends ConsumerWidget implements PreferredSizeWidget {
         style:AppText.title,
         onChanged: (text){
           final notifier=ref.read(campStateNotifierProvider.notifier);
-          notifier.updateTitle(_campIndex,text);
+          final campState=ref.read(campStateNotifierProvider);
+          notifier.updateCampTitle(campState[_campIndex],text);
         },
       ),
       actions: (_currentPageIndex==0) ? [IconButton(onPressed: (){
         final notifier=ref.read(campStateNotifierProvider.notifier);
-        notifier.addBand(_campIndex);
-    
+        final campState=ref.read(campStateNotifierProvider);
+        notifier.addNamelessBand(campState[_campIndex]);
+      
         _bandControllerList.add([TextEditingController(text:"")]);
         _focusNodeList.add(FocusNode());
         _links.add(LayerLink());

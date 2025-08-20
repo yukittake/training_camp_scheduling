@@ -1,14 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:training_camp_scheduling/application/state/camp_state.dart';
-import 'package:training_camp_scheduling/domain/types/band.dart';
+import 'package:training_camp_scheduling/domain/entities/band.dart';
+import 'package:training_camp_scheduling/presentation/state/camp_state.dart';
 import 'package:training_camp_scheduling/presentation/theme/colors.dart';
 import 'package:training_camp_scheduling/presentation/theme/fonts.dart';
 import 'package:training_camp_scheduling/presentation/widgets/delete_overlay_widget.dart';
 import 'package:training_camp_scheduling/presentation/widgets/first_schedule_widget.dart';
 import 'package:training_camp_scheduling/presentation/widgets/manage_band_widget.dart';
 import 'package:training_camp_scheduling/presentation/widgets/second_page_app_bar.dart';
-
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SecondPage extends ConsumerStatefulWidget {
   final int index;
@@ -122,7 +121,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
           )
         ,
         //スケジューリング
-          if(campState[widget.index].schedule.isEmpty) FirstScheduleWidget(bands: campState[widget.index].bands,index: widget.index,rooms: campState[widget.index].rooms,bandControllerList: _bandControllerList,)
+          if(campState[widget.index].schedule.isEmpty) FirstScheduleWidget(bands: campState[widget.index].bands,campIndex: widget.index,rooms: campState[widget.index].rooms,bandControllerList: _bandControllerList,)
           else Text("hello")
         ][_currentPageIndex]
       ),

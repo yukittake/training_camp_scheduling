@@ -1,9 +1,9 @@
+import 'package:training_camp_scheduling/presentation/state/camp_state.dart';
+import 'package:training_camp_scheduling/presentation/theme/colors.dart';
+import 'package:training_camp_scheduling/presentation/theme/fonts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:training_camp_scheduling/application/state/camp_state.dart';
-import 'package:training_camp_scheduling/presentation/theme/colors.dart';
-import 'package:training_camp_scheduling/presentation/theme/fonts.dart';
 class SelectRoomsWidget extends ConsumerStatefulWidget {
   final int _index;
   final int _rooms;
@@ -52,7 +52,8 @@ class _SelectRoomsWidgetState extends ConsumerState<SelectRoomsWidget> {
                 Expanded(child: SizedBox(),),
                 TextButton(onPressed: (){
                   final notifier=ref.read(campStateNotifierProvider.notifier);
-                  notifier.updateRooms(widget._index,_selectedNumber+1); //_selectedNumberは添字のため+1
+                  final campState=ref.read(campStateNotifierProvider);
+                  notifier.updateRooms(campState[widget._index],_selectedNumber+1); //_selectedNumberは添字のため+1
                   Navigator.pop(context);
                 }, style: TextButton.styleFrom(overlayColor: AppColor.black),child: Text("保存",style:AppText.normal),),
                 SizedBox(width: 10,),

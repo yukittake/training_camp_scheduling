@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:training_camp_scheduling/presentation/theme/colors.dart';
+import 'package:flutter/material.dart';
 class AppFont{
   static const general ='NotoSansJP';
 }

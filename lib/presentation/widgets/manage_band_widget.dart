@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:training_camp_scheduling/application/state/camp_state.dart';
-import 'package:training_camp_scheduling/domain/types/band.dart';
+import 'package:training_camp_scheduling/domain/entities/band.dart';
+import 'package:training_camp_scheduling/presentation/state/camp_state.dart';
 import 'package:training_camp_scheduling/presentation/theme/colors.dart';
 import 'package:training_camp_scheduling/presentation/theme/fonts.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 
 class ManageBandWidget extends ConsumerWidget {
@@ -41,7 +41,8 @@ class ManageBandWidget extends ConsumerWidget {
                 controller: _bandControllerList[_bandIndex][i+1],
                 onChanged: (newMemberName) {
                   final notifier=ref.read(campStateNotifierProvider.notifier);
-                  notifier.updateMember(_campIndex, _bandIndex, i, newMemberName);
+                  final campState=ref.read(campStateNotifierProvider);
+                  notifier.updateMember(campState[_campIndex],_bandIndex,i,newMemberName);
                 },
                 focusNode: (i==_aBand.members.length-1) ? _focusNodeList[_bandIndex] : null,
                 style: AppText.normal,
@@ -70,7 +71,8 @@ class ManageBandWidget extends ConsumerWidget {
                 focusNode: (i==_aBand.members.length-1) ? _focusNodeList[_bandIndex] : null,
                 onChanged: (newMemberName) {
                   final notifier=ref.read(campStateNotifierProvider.notifier);
-                  notifier.updateMember(_campIndex, _bandIndex, i, newMemberName);
+                  final campState=ref.read(campStateNotifierProvider);
+                  notifier.updateMember(campState[_campIndex], _bandIndex, i, newMemberName);
                 },
                 style: AppText.normal,
                 decoration: InputDecoration(
@@ -92,7 +94,8 @@ class ManageBandWidget extends ConsumerWidget {
     children.add(
       IconButton(onPressed: (){
         final notifier=ref.read(campStateNotifierProvider.notifier);
-        notifier.addMember(_campIndex, _bandIndex);
+        final campState=ref.read(campStateNotifierProvider);
+        notifier.addNamelessMember(campState[_campIndex],_bandIndex);
         _bandControllerList[_bandIndex].add(TextEditingController(text:""));
         _focusNodeList[_bandIndex].unfocus();
         WidgetsBinding.instance.addPostFrameCallback((_) async{
@@ -149,7 +152,8 @@ class ManageBandWidget extends ConsumerWidget {
                           ),
                           onTap: (){
                             final notifier=ref.read(campStateNotifierProvider.notifier);
-                            notifier.turnOpen(_campIndex, _bandIndex);
+                            final campState=ref.read(campStateNotifierProvider);
+                            notifier.turnOpenBand(campState[_campIndex],_bandIndex);
                           },
                         ),
                       ),
@@ -158,7 +162,8 @@ class ManageBandWidget extends ConsumerWidget {
                           controller: _bandControllerList[_bandIndex][0],
                           onChanged: (title){
                             final notifier=ref.read(campStateNotifierProvider.notifier);
-                            notifier.updateBand(_campIndex, _bandIndex, title);
+                            final campState=ref.read(campStateNotifierProvider);
+                            notifier.updateBandTitle(campState[_campIndex],_bandIndex,title);
                           },
                           style: AppText.normal,
                           decoration: InputDecoration(

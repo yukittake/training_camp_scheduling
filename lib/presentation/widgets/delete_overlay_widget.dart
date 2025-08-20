@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:training_camp_scheduling/application/state/camp_state.dart';
+import 'package:training_camp_scheduling/presentation/state/camp_state.dart';
 import 'package:training_camp_scheduling/presentation/theme/colors.dart';
 import 'package:training_camp_scheduling/presentation/theme/fonts.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DeleteOverlayWidget extends ConsumerWidget {
   final void Function() _removeDeleteOverlay;
@@ -56,8 +56,9 @@ class DeleteOverlayWidget extends ConsumerWidget {
                             behavior: HitTestBehavior.opaque,
                             onTap: (){
                               final notifier=ref.read(campStateNotifierProvider.notifier);
+                              final campState=ref.read(campStateNotifierProvider);
                               if(index==_members){
-                                notifier.deleteBand(_campIndex, _bandIndex);
+                                notifier.deleteBand(campState[_campIndex],_bandIndex);
                                 for(TextEditingController temp in _bandControllerList[_bandIndex]){
                                   temp.dispose();
                                 }
@@ -66,7 +67,7 @@ class DeleteOverlayWidget extends ConsumerWidget {
                                 _focusNodeList[_bandIndex].dispose();
                                 _focusNodeList.removeAt(_bandIndex);
                               }else{
-                                notifier.deleteMember(_campIndex, _bandIndex, index);
+                                notifier.deleteMember(campState[_campIndex], _bandIndex, index);
                                 _bandControllerList[_bandIndex][index+1].dispose();
                                 _bandControllerList[_bandIndex].removeAt(index+1);
                               }
