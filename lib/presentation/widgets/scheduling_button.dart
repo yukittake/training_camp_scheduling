@@ -1,4 +1,3 @@
-import 'package:training_camp_scheduling/domain/entities/band.dart';
 import 'package:training_camp_scheduling/domain/entities/exception_bandtitle.dart';
 import 'package:training_camp_scheduling/presentation/state/camp_state.dart';
 import 'package:training_camp_scheduling/presentation/theme/colors.dart';
@@ -19,6 +18,7 @@ class SchedulingButton extends ConsumerWidget {
       try{
         final campState=ref.read(campStateNotifierProvider);
         final notifier=ref.read(campStateNotifierProvider.notifier);
+        final emptyMemberFlag=campState[_campIndex].hasEmptyMember();
         final deletedIndexList=notifier.makeSchedule(campState[_campIndex]);
         for(int i=deletedIndexList.length-1;i>=0;i--){
           for(int j=deletedIndexList[i].length-1;j>=0;j--){
@@ -26,13 +26,13 @@ class SchedulingButton extends ConsumerWidget {
             _bandControllerList[i].removeAt(deletedIndexList[i][j]+1);
           }
         }
+        if(emptyMemberFlag) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("空白のメンバーを削除しました"),backgroundColor: AppColor.green,behavior: SnackBarBehavior.floating,duration: Duration(seconds: 2),));
       }on BandtitleException catch(e){
-        print("$e"); //dialogs
         for(int temp in e.emptyTitleIndex){
-          print(temp);
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${temp+1}番目： $e",style: AppText.white,),backgroundColor: AppColor.red,behavior: SnackBarBehavior.floating,duration: Duration(seconds: 2),));
         }
       }catch(e){
-        print("$e");
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString(),style: AppText.white,),backgroundColor: AppColor.red,behavior: SnackBarBehavior.floating,duration: Duration(seconds: 2),));
       }
     },style:FilledButton.styleFrom(backgroundColor: AppColor.lightBlue,textStyle: AppText.smallWhite,),
       child: SizedBox(

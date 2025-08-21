@@ -17,7 +17,7 @@ class MakeSchedule {
     }
     final emptyBandTitleIndex=camp.emptyBandTitleIndex();
     if(emptyBandTitleIndex.isNotEmpty){
-      throw BandtitleException("バンド名が未記入のものがあります",emptyBandTitleIndex);
+      throw BandtitleException("バンド名が未入力です",emptyBandTitleIndex);
     }
 
     //空白のメンバーを消す
@@ -35,7 +35,7 @@ class MakeSchedule {
     //実装
     List<List<Band>> result =newCamp.greedyScheduling();
     final updateSchedule=UpdateSchedule(repo);
-    updateSchedule(camp,result);
+    updateSchedule(newCamp,result);
     return emptyMemberIndex; //消したbandindexとmemberindexがわかるようにreturn 
   }
 }

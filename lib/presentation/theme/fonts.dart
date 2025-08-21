@@ -45,6 +45,12 @@ class AppText{
     color:AppColor.red,
     decoration: TextDecoration.none,
   );
+  static const white = TextStyle(
+    fontSize: 15,
+    fontFamily: AppFont.general,
+    fontWeight: FontWeight.w400,
+    color: AppColor.white,
+  );
   static const smallWhite = TextStyle(
     fontSize: 13,
     fontFamily: AppFont.general,

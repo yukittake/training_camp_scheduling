@@ -7,12 +7,6 @@ class UpdateSchedule {
   UpdateSchedule(this.repo);
 
   void call(Camp camp,List<List<Band>> newSchedule){
-    for(int i=0;i<newSchedule.length;i++){
-      print("----------------");
-      for(int j=0;j<newSchedule[i].length;j++){
-        print(newSchedule[i][j].bandTitle);
-      }
-    }
     final newCamp=camp.copyWith();
     newCamp.schedule=newSchedule;
     repo.edit(newCamp);
