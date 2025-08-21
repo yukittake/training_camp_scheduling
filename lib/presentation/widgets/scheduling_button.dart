@@ -14,9 +14,9 @@ class SchedulingButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final campState=ref.watch(campStateNotifierProvider);
     return FilledButton(onPressed: (){
       try{
-        final campState=ref.read(campStateNotifierProvider);
         final notifier=ref.read(campStateNotifierProvider.notifier);
         final emptyMemberFlag=campState[_campIndex].hasEmptyMember();
         final deletedIndexList=notifier.makeSchedule(campState[_campIndex]);
@@ -34,17 +34,22 @@ class SchedulingButton extends ConsumerWidget {
       }catch(e){
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString(),style: AppText.white,),backgroundColor: AppColor.red,behavior: SnackBarBehavior.floating,duration: Duration(seconds: 2),));
       }
-    },style:FilledButton.styleFrom(backgroundColor: AppColor.lightBlue,textStyle: AppText.smallWhite,),
-      child: SizedBox(
-        width: 140,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.edit,size: 17,),
-            SizedBox(width: 10,),
-            const Text('スケジュール作成'),
-          ],
-        ),
+    },style:FilledButton.styleFrom(
+        backgroundColor: AppColor.lightBlue,
+        textStyle: AppText.smallWhite,
+        minimumSize: Size.zero, 
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 18),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        visualDensity: VisualDensity.compact, 
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          campState[_campIndex].schedule.isEmpty ? Icon(Icons.edit,size: 17,) : Icon(Icons.autorenew,size: 17,),
+          SizedBox(width: 10,),
+          campState[_campIndex].schedule.isEmpty ? const Text('スケジュール作成') : const Text('スケジュール更新'),
+        ],
       ),
     );
   }

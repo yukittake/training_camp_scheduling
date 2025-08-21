@@ -5,11 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 class SelectRoomsWidget extends ConsumerStatefulWidget {
-  final int _index;
+  final int _campIndex;
   final int _rooms;
   final double _width;
-  const SelectRoomsWidget({super.key,required index,required rooms,required width}):
-    _index=index,
+  const SelectRoomsWidget({super.key,required campIndex,required rooms,required width}):
+    _campIndex=campIndex,
     _rooms=rooms,
     _width=width;
 
@@ -53,7 +53,7 @@ class _SelectRoomsWidgetState extends ConsumerState<SelectRoomsWidget> {
                 TextButton(onPressed: (){
                   final notifier=ref.read(campStateNotifierProvider.notifier);
                   final campState=ref.read(campStateNotifierProvider);
-                  notifier.updateRooms(campState[widget._index],_selectedNumber+1); //_selectedNumberは添字のため+1
+                  notifier.updateRooms(campState[widget._campIndex],_selectedNumber+1); //_selectedNumberは添字のため+1
                   Navigator.pop(context);
                 }, style: TextButton.styleFrom(overlayColor: AppColor.black),child: Text("保存",style:AppText.normal),),
                 SizedBox(width: 10,),

@@ -11,8 +11,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:training_camp_scheduling/presentation/widgets/second_schedule_widget.dart';
 
 class SecondPage extends ConsumerStatefulWidget {
-  final int index;
-  const SecondPage({super.key,required this.index});
+  final int campIndex;
+  const SecondPage({super.key,required this.campIndex});
 
   @override
   ConsumerState<SecondPage> createState() => _SecondPageState();
@@ -36,7 +36,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
   void _createDeleteOverlay(int bandIndex,int members){
     _removeDeleteOverlay();
     _overlayEntry = OverlayEntry(builder: (context) {
-      return DeleteOverlayWidget(removeDeleteOverlay: _removeDeleteOverlay, links: _links, bandIndex: bandIndex, members: members, campIndex: widget.index, bandControllerList: _bandControllerList, focusNodeList: _focusNodeList);
+      return DeleteOverlayWidget(removeDeleteOverlay: _removeDeleteOverlay, links: _links, bandIndex: bandIndex, members: members, campIndex: widget.campIndex, bandControllerList: _bandControllerList, focusNodeList: _focusNodeList);
     },);
     Overlay.of(context,debugRequiredFor: widget).insert(_overlayEntry!);
   }
@@ -46,8 +46,8 @@ class _SecondPageState extends ConsumerState<SecondPage> {
     super.initState();
     final campState=ref.read(campStateNotifierProvider);
     _scrollController=ScrollController();
-    _titleController=TextEditingController(text:campState[widget.index].campTitle);
-    for(Band temp in campState[widget.index].bands){
+    _titleController=TextEditingController(text:campState[widget.campIndex].campTitle);
+    for(Band temp in campState[widget.campIndex].bands){
       List<TextEditingController> templ=[TextEditingController(text:temp.bandTitle)];
       _focusNodeList.add(FocusNode());
       _links.add(LayerLink());
@@ -84,7 +84,7 @@ class _SecondPageState extends ConsumerState<SecondPage> {
       },
       child: Scaffold(
         backgroundColor: AppColor.white,
-        appBar: SecondPageAppBar(titleController: _titleController, currentPageIndex: _currentPageIndex, campIndex: widget.index, bandControllerList: _bandControllerList, focusNodeList: _focusNodeList, links: _links, scrollController: _scrollController),
+        appBar: SecondPageAppBar(titleController: _titleController, currentPageIndex: _currentPageIndex, campIndex: widget.campIndex, bandControllerList: _bandControllerList, focusNodeList: _focusNodeList, links: _links, scrollController: _scrollController),
         bottomNavigationBar: NavigationBar(
           selectedIndex: _currentPageIndex,
           onDestinationSelected: (value) {
@@ -110,20 +110,20 @@ class _SecondPageState extends ConsumerState<SecondPage> {
         ),
         body:[
         //バンド管理
-          if(campState[widget.index].bands.isEmpty) Center(child: Text("＋でバンドを追加",style:AppText.annotation,))
+          if(campState[widget.campIndex].bands.isEmpty) Center(child: Text("＋でバンドを追加",style:AppText.annotation,))
           else ListView.separated(
             controller: _scrollController,
-            itemCount: campState[widget.index].bands.length,
+            itemCount: campState[widget.campIndex].bands.length,
             itemBuilder: (BuildContext context, int index){
-              final aBand=campState[widget.index].bands[index];
-              return ManageBandWidget(aBand: aBand, bandIndex: index, campIndex: widget.index, links: _links, bandControllerList: _bandControllerList, overlayEntry: _overlayEntry, createDeleteOverlay: _createDeleteOverlay, removeDeleteOverlay: _removeDeleteOverlay, focusNodeList: _focusNodeList, scrollController: _scrollController);
+              final aBand=campState[widget.campIndex].bands[index];
+              return ManageBandWidget(aBand: aBand, bandIndex: index, campIndex: widget.campIndex, links: _links, bandControllerList: _bandControllerList, overlayEntry: _overlayEntry, createDeleteOverlay: _createDeleteOverlay, removeDeleteOverlay: _removeDeleteOverlay, focusNodeList: _focusNodeList, scrollController: _scrollController);
             },
             separatorBuilder: (BuildContext context, int index) => const Padding(padding: EdgeInsets.only(top: 30),),
           )
         ,
         //スケジューリング
-          if(campState[widget.index].schedule.isEmpty) FirstScheduleWidget(campIndex: widget.index,rooms: campState[widget.index].rooms,bandControllerList: _bandControllerList,)
-          else SecondScheduleWidget()
+          if(campState[widget.campIndex].schedule.isEmpty) FirstScheduleWidget(campIndex: widget.campIndex,rooms: campState[widget.campIndex].rooms,bandControllerList: _bandControllerList,)
+          else SecondScheduleWidget(campIndex: widget.campIndex,rooms: campState[widget.campIndex].rooms,bandControllerList: _bandControllerList,)
         ][_currentPageIndex]
       ),
     );

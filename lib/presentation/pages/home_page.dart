@@ -51,7 +51,7 @@ class MyHomePage extends ConsumerWidget{
                   onTap: () {
                     Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SecondPage(index:reversedIndex)),
+                    MaterialPageRoute(builder: (context) => SecondPage(campIndex:reversedIndex)),
                   );
                   },
                   child: Container(

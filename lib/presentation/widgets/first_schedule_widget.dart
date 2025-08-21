@@ -18,7 +18,7 @@ class FirstScheduleWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SelectRoomsWidget(index: _campIndex,rooms: _rooms,width: MediaQuery.of(context).size.width*0.94,),
+          SelectRoomsWidget(campIndex: _campIndex,rooms: _rooms,width: MediaQuery.of(context).size.width*0.94,),
           SizedBox(height: 30,)
           ,
           Container(
