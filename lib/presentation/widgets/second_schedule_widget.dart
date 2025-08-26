@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:training_camp_scheduling/presentation/widgets/download_csv_button.dart';
 import 'package:training_camp_scheduling/presentation/widgets/scheduling_button.dart';
 import 'package:training_camp_scheduling/presentation/widgets/select_rooms_widget.dart';
 
@@ -28,6 +29,7 @@ class SecondScheduleWidget extends ConsumerWidget {
             ],
           ),
         ),
+        Align(alignment: Alignment.centerRight,child: DownloadCsvButton(campIndex: _campIndex,))
       ],
     );
   }

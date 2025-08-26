@@ -57,4 +57,12 @@ class AppText{
     fontWeight: FontWeight.w400,
     color: AppColor.white
   );
+  static const tappable = TextStyle(
+    decoration: TextDecoration.underline,
+    fontSize: 13,
+    fontFamily: AppFont.general,
+    fontWeight: FontWeight.w400,
+    color: AppColor.lightBlue,
+    decorationColor: AppColor.lightBlue,
+  );
 }

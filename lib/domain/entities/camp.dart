@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:training_camp_scheduling/domain/entities/band.dart';
 
 class Camp {
@@ -88,5 +89,19 @@ class Camp {
       result.add(currentGroup);
     }
     return result;
+  }
+
+  List<int> encodingSchedule() {
+    String escape(String s) {
+      if (s.contains(RegExp(r'[",\r\n]'))) {
+        return '"${s.replaceAll('"', '""')}"';
+      }
+      return s;
+    }
+
+    final csv = _schedule
+      .map((row) => row.map((v) => escape((v).bandTitle)).join(','))
+      .join('\r\n');
+    return utf8.encode('\u{FEFF}$csv');
   }
 }
