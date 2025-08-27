@@ -38,6 +38,13 @@ class AppText{
     fontWeight: FontWeight.w400,
     color: AppColor.greySubString
   );
+  static const greyMainString = TextStyle(
+    fontSize:15,
+    fontFamily: AppFont.general,
+    fontWeight: FontWeight.w400,
+    color: AppColor.greyMainString,
+    decoration: TextDecoration.none,
+  );
   static const delete = TextStyle(
     fontSize: 13,
     fontFamily: AppFont.general,

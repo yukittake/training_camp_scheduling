@@ -91,6 +91,14 @@ class Camp {
     return result;
   }
 
+  int maxRooms(){
+    int maxRooms=0;
+    for(final group in _schedule){
+      if(group.length>maxRooms) maxRooms=group.length;
+    }
+    return maxRooms;
+  }
+
   List<int> encodingSchedule() {
     String escape(String s) {
       if (s.contains(RegExp(r'[",\r\n]'))) {
