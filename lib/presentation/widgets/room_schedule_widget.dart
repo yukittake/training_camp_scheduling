@@ -5,12 +5,10 @@ import 'package:training_camp_scheduling/presentation/theme/colors.dart';
 import 'package:training_camp_scheduling/presentation/theme/fonts.dart';
 
 class RoomScheduleWidget extends ConsumerWidget {
-  final int _campIndex;
   final int _currentRoom;
   final List<List<Band>> _filledSchedule;
   final int _timeIndex;
-  const RoomScheduleWidget({super.key,required campIndex, required currentRoom, required filledSchedule, required timeIndex}):
-    _campIndex=campIndex,
+  const RoomScheduleWidget({super.key,required currentRoom, required filledSchedule, required timeIndex}):
     _currentRoom=currentRoom,
     _filledSchedule=filledSchedule,
     _timeIndex=timeIndex;

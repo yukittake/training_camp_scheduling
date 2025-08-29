@@ -96,7 +96,7 @@ class _SecondScheduleWidgetState extends ConsumerState<SecondScheduleWidget> {
                     // SizedBox(width: 20,),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 20),
-                      child: RoomScheduleWidget(campIndex: widget._campIndex,currentRoom: _currentRoom,timeIndex: index,filledSchedule: fixed,),
+                      child: RoomScheduleWidget(currentRoom: _currentRoom,timeIndex: index,filledSchedule: fixed,),
                     ),
                   ],
                 ),
