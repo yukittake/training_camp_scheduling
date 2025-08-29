@@ -112,4 +112,16 @@ class Camp {
       .join('\r\n');
     return utf8.encode('\u{FEFF}$csv');
   }
+
+  List<List<Band>> fillNullInSchedule(){
+    List<List<Band>> filledSchedule=[];
+    for(final group in _schedule){
+      List<Band> filledGroup=List.from(group);
+      while(filledGroup.length<maxRooms()){
+        filledGroup.add(Band(bandTitle: "空室", members: <String>[], open: false));
+      }
+      filledSchedule.add(filledGroup);
+    }
+    return filledSchedule;
+  }
 }
