@@ -56,10 +56,10 @@ flutter:
 
 
 flutter_icons: 
-  image_path_android: assets/launcher_icon/android_icon.png
+  image_path_android: assets/launcher_icon/icon_512.png
   adaptive_icon_background: '#FFFFFF' #iconの背景色
-  adaptive_icon_foreground: assets/launcher_icon/android_icon.png
-  image_path_ios: assets/launcher_icon/ios_icon.png
+  adaptive_icon_foreground: assets/launcher_icon/icon_512.png
+  image_path_ios: assets/launcher_icon/icon_1024.png
   android: true
   adaptive_icon_padding: true
   min_sdk_android: 30 #Androidの最小SDKバージョン
