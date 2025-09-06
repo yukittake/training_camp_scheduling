@@ -2,13 +2,13 @@ import 'package:training_camp_scheduling/domain/entities/camp.dart';
 import 'package:training_camp_scheduling/domain/repositories/camp_repository.dart';
 import 'package:training_camp_scheduling/domain/repositories/garbage_repository.dart';
 
-class DeleteCamp {
+class BackFromGarbage {
   final CampRepository campRepo;
   final GarbageRepository garbageRepo;
-  DeleteCamp(this.campRepo, this.garbageRepo);
+  BackFromGarbage(this.campRepo, this.garbageRepo);
 
   void call(Camp camp) {
-    campRepo.delete(camp.id);
-    garbageRepo.edit(camp);
+    garbageRepo.delete(camp.id);
+    campRepo.edit(camp);
   }
 }

@@ -1,37 +1,39 @@
-import 'package:training_camp_scheduling/presentation/pages/second_page.dart' show SecondPage;
-import 'package:training_camp_scheduling/presentation/state/camp_state.dart';
+import 'package:training_camp_scheduling/presentation/pages/home_page.dart';
+import 'package:training_camp_scheduling/presentation/state/garbage_state.dart';
 import 'package:training_camp_scheduling/presentation/theme/colors.dart';
 import 'package:training_camp_scheduling/presentation/theme/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-class MyHomePage extends ConsumerWidget{
-  const MyHomePage({super.key});
+class GarbagePage extends ConsumerWidget{
+  const GarbagePage({super.key});
   @override
   Widget build(BuildContext context,WidgetRef ref) {
-    final campState=ref.watch(campStateNotifierProvider);
+    final garbageState=ref.watch(garbageStateNotifierProvider);
     return Scaffold(
       backgroundColor: AppColor.white,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: SizedBox(width: 110,child: IconButton(onPressed: (){
-          Navigator.pop(context);
-        }, icon: Row(children: [Icon(Icons.arrow_back_ios),Text("ゴミ箱",style: AppText.subTitle,)],))),
         centerTitle: false,
         backgroundColor: AppColor.white,
         surfaceTintColor: Colors.transparent,
-        actions: [IconButton(onPressed: (){
-          final notifier=ref.read(campStateNotifierProvider.notifier);
-          notifier.addNamelessCamp();
-        }, icon: Icon(Icons.add_circle,size: 45,color: AppColor.black,))],  
+        title: Align(
+          alignment: Alignment.centerRight,
+          child: SizedBox(width: 110,child: IconButton(onPressed: (){
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const MyHomePage()),
+            );
+          }, icon: Row(children: [Text("ホーム",style: AppText.subTitle,),Icon(Icons.arrow_forward_ios),],))),
+        ),
       ),
-      body: ListView.separated(
-        itemCount: campState.length+1, //+1は"ホーム"表示用
+      body:
+      ListView.separated(
+        itemCount: garbageState.length+1, //+1は"ホーム"表示用
         itemBuilder: (BuildContext context, int index) {
-          final reversedIndex = campState.length - index;
+          final reversedIndex = garbageState.length - index;
           if(index==0){
             return Padding(
               padding: const EdgeInsets.only(left: 20),
-              child: Text("ホーム",style:AppText.title),
+              child: Text("ゴミ箱",style:AppText.title),
             );
           }
           return Align(
@@ -39,11 +41,11 @@ class MyHomePage extends ConsumerWidget{
             ClipRRect(
               borderRadius: BorderRadius.circular(30),
               child: Dismissible(
-                key:ValueKey(campState[reversedIndex].id),
+                key:ValueKey(garbageState[reversedIndex].id),
                 direction: DismissDirection.endToStart,
                 onDismissed: (direction) {
-                  final notifier=ref.read(campStateNotifierProvider.notifier);
-                  notifier.deleteCamp(campState[reversedIndex]);
+                  final notifier=ref.read(garbageStateNotifierProvider.notifier);
+                  notifier.completelyDelete(garbageState[reversedIndex].id);
                 },
                 background: Container(
                       decoration: BoxDecoration(
@@ -58,10 +60,8 @@ class MyHomePage extends ConsumerWidget{
                     ),
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SecondPage(campIndex:reversedIndex)),
-                  );
+                    final notifier=ref.read(garbageStateNotifierProvider.notifier);
+                    notifier.backFromGarbage(garbageState[reversedIndex]);
                   },
                   child: Container(
                       color: AppColor.red,
@@ -82,7 +82,7 @@ class MyHomePage extends ConsumerWidget{
                           ),
                           child: Padding(
                             padding: const EdgeInsets.only(left:18,top: 13,bottom:40,right: 15),
-                            child: Text(campState[reversedIndex].campTitle,style:AppText.subTitle),
+                            child: Text(garbageState[reversedIndex].campTitle,style:AppText.subTitle),
                           ),
                         ),
                       ),

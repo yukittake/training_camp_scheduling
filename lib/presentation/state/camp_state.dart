@@ -15,6 +15,7 @@ import 'package:training_camp_scheduling/application/usecases/update_schedule.da
 import 'package:training_camp_scheduling/domain/entities/band.dart';
 
 import 'package:training_camp_scheduling/domain/entities/camp.dart';
+import 'package:training_camp_scheduling/presentation/state/garbage_state.dart';
 import 'package:training_camp_scheduling/presentation/state/providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'camp_state.g.dart';
@@ -39,12 +40,17 @@ class CampStateNotifier extends _$CampStateNotifier {
   @override
   List<Camp> build() => _getCamps();
 
+  void refresh(){
+    state=_getCamps();
+  }
+
   void addNamelessCamp(){
     _addNamelessCamp();
     state=_getCamps();
   }
-  void deleteCamp(String id){
-    _deleteCamp(id);
+  void deleteCamp(Camp camp){
+    _deleteCamp(camp);
+    ref.read(garbageStateNotifierProvider.notifier).refresh();
     state=_getCamps();
   }
   void updateCampTitle(Camp camp,String newCampTitle){
@@ -102,4 +108,5 @@ class CampStateNotifier extends _$CampStateNotifier {
     state=_getCamps();
     return result;
   }
+
 }
