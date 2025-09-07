@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:training_camp_scheduling/presentation/pages/home_page.dart';
 import 'package:training_camp_scheduling/presentation/state/garbage_state.dart';
 import 'package:training_camp_scheduling/presentation/theme/colors.dart';
 import 'package:training_camp_scheduling/presentation/theme/fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:training_camp_scheduling/presentation/widgets/delete_action_sheet.dart';
+import 'package:training_camp_scheduling/presentation/widgets/restore_action_sheet.dart';
 class GarbagePage extends ConsumerWidget{
   const GarbagePage({super.key});
   @override
@@ -27,13 +30,27 @@ class GarbagePage extends ConsumerWidget{
       ),
       body:
       ListView.separated(
-        itemCount: garbageState.length+1, //+1は"ホーム"表示用
+        itemCount: garbageState.length+1, //+1は"ゴミ箱"表示用
         itemBuilder: (BuildContext context, int index) {
           final reversedIndex = garbageState.length - index;
           if(index==0){
             return Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: Text("ゴミ箱",style:AppText.title),
+              padding: const EdgeInsets.only(left: 20,right: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("ゴミ箱",style:AppText.title),
+                  IconButton(onPressed: (){
+                    showCupertinoModalPopup(
+                      context: context, 
+                      builder: (BuildContext context){
+                        List<int> list = List.generate(garbageState.length, (i) => garbageState.length - i - 1);
+                        return DeleteActionSheet(selectedIndices: list,text:"${list.length}件すべてを完全に削除しますか？",);
+                      }
+                    );
+                  }, icon: Icon(Icons.delete_forever_outlined,size: 35,)),
+                ],
+              ),
             );
           }
           return Align(
@@ -43,9 +60,14 @@ class GarbagePage extends ConsumerWidget{
               child: Dismissible(
                 key:ValueKey(garbageState[reversedIndex].id),
                 direction: DismissDirection.endToStart,
-                onDismissed: (direction) {
-                  final notifier=ref.read(garbageStateNotifierProvider.notifier);
-                  notifier.completelyDelete(garbageState[reversedIndex].id);
+                confirmDismiss: (direction) async {
+                  final flag = await showCupertinoModalPopup(
+                    context: context, 
+                    builder: (BuildContext context){
+                      return DeleteActionSheet(selectedIndices: [reversedIndex],text:"選択した1件を完全に削除しますか？");
+                    }
+                  );
+                  return flag;
                 },
                 background: Container(
                       decoration: BoxDecoration(
@@ -59,9 +81,14 @@ class GarbagePage extends ConsumerWidget{
                       child: Icon(Icons.delete,color:AppColor.white)
                     ),
                 child: GestureDetector(
-                  onTap: () {
-                    final notifier=ref.read(garbageStateNotifierProvider.notifier);
-                    notifier.backFromGarbage(garbageState[reversedIndex]);
+                  onTap: () async{
+                    final flag = await showCupertinoModalPopup(
+                    context: context, 
+                    builder: (BuildContext context){
+                      return RestoreActionSheet(selectedIndices: [reversedIndex],text:"選択した1件を復元しますか？");
+                    }
+                    );
+                    return flag;
                   },
                   child: Container(
                       color: AppColor.red,

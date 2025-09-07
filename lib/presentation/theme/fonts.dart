@@ -52,6 +52,13 @@ class AppText{
     color:AppColor.red,
     decoration: TextDecoration.none,
   );
+  static const largeDelete = TextStyle(
+    fontSize: 20,
+    fontFamily: AppFont.general,
+    fontWeight: FontWeight.w400,
+    color:AppColor.red,
+    decoration: TextDecoration.none,
+  );
   static const white = TextStyle(
     fontSize: 15,
     fontFamily: AppFont.general,
@@ -71,5 +78,13 @@ class AppText{
     fontWeight: FontWeight.w400,
     color: AppColor.lightBlue,
     decorationColor: AppColor.lightBlue,
+  );
+
+  static const restore = TextStyle(
+    fontSize: 20,
+    fontFamily: AppFont.general,
+    fontWeight: FontWeight.w400,
+    color:AppColor.blue,
+    decoration: TextDecoration.none,
   );
 }
