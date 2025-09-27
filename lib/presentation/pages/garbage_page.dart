@@ -41,13 +41,13 @@ class GarbagePage extends ConsumerWidget{
                 children: [
                   Text("ゴミ箱",style:AppText.title),
                   IconButton(onPressed: (){
-                    showCupertinoModalPopup(
+                    List<int> list = List.generate(garbageState.length, (i) => garbageState.length - i - 1);
+                    if(list.isNotEmpty){showCupertinoModalPopup(
                       context: context, 
                       builder: (BuildContext context){
-                        List<int> list = List.generate(garbageState.length, (i) => garbageState.length - i - 1);
                         return DeleteActionSheet(selectedIndices: list,text:"${list.length}件すべてを完全に削除しますか？",);
                       }
-                    );
+                    );}
                   }, icon: Icon(Icons.delete_forever_outlined,size: 35,)),
                 ],
               ),

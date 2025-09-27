@@ -91,9 +91,7 @@ class _SecondScheduleWidgetState extends ConsumerState<SecondScheduleWidget> {
                       padding: const EdgeInsets.only(top: 8),
                       child: Text("${index+1}時間目",style: AppText.greyMainString,),
                     ),
-                    // SizedBox(width: 20,),
                     VerticalDivider(width: 24,thickness:1.0,color: AppColor.black,),
-                    // SizedBox(width: 20,),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 20),
                       child: RoomScheduleWidget(currentRoom: _currentRoom,timeIndex: index,filledSchedule: fixed,),
