@@ -18,7 +18,7 @@ import 'package:training_camp_scheduling/application/usecases/update_schedule.da
 import 'package:training_camp_scheduling/domain/repositories/camp_repository.dart';
 import 'package:training_camp_scheduling/domain/repositories/garbage_repository.dart';
 import 'package:training_camp_scheduling/infrastructure/camp_repository_impl.dart';
-import 'package:training_camp_scheduling/infrastructure/garbage_data_source.dart';
+import 'package:training_camp_scheduling/infrastructure/garbage_repository_impl.dart';
 import 'package:training_camp_scheduling/infrastructure/hive_camp_data_source.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:training_camp_scheduling/infrastructure/hive_garbage_data_source.dart';
